@@ -1,0 +1,317 @@
+---
+course_num: "11.S938"
+title: "Quantitative Reasoning and Statistical Methods for Planners"
+subtitle: "Syllabus"
+date: "Spring 2024"
+thanks: "This syllabus was built atop, benefitted immensely from, and owes a great debt of gratitude to the prior efforts of Justin Steil, Ezra Haber Glenn, and Mariana Arcaya."
+numbersections: true
+secnumdepth: 2
+colorlinks: true
+toc: true
+toc-depth: 2
+linkcolor: red
+citecolor: red
+urlcolor: red
+output:
+  pdf_document: 
+    template: syllabus.latex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+meta <- yaml::read_yaml(file = "meta.yaml")
+```
+
+# Course Information
+
+> The late poet-warrior, Audre Lorde, warned that the master's tools will never dismantle the master's house. [...] The issue is not whether the master uses, or endorses the use of, some tool or another. Rather, who controls the conditions and the ends to which any tools are weilded? [...] If the master loses control of the means of production, he is no longer the master. [@gilmore_public_2022, 79]
+
+Which is to say: welcome to quantitative reasoning and statistical methods for planners.
+
+## Schedule
+
+```{r echo=FALSE, results = "asis"}
+if ("lectures" %in% names(meta)) {
+  o <- "### Lectures \n\n"
+  for(i in meta$lectures) {
+    o <- paste0(
+      o,
+      glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
+    )
+  }
+  cat(paste0(o, "\n\n"))
+}
+
+if ("recitations" %in% names(meta)) {
+  o <- "### Recitations \n\n"
+  for(i in meta$recitations) {
+    o <- paste0(
+      o,
+      glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
+    )
+  }
+  cat(paste0(o, "\n\n"))
+}
+```
+
+## Teaching Team
+
+```{r echo=FALSE, results = "asis"}
+staff <- meta$staff
+if ("instructors" %in% names(staff)) {
+  o <- "### Instructors\n\n"
+  authors <- c()
+  for(i in staff$instructors) {
+    authors <- append(authors, i$name)
+    o <- paste0(
+      o, 
+      glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email}, {i$office}\n\n")
+      )
+  }
+  cat(paste0(o, "\n\n"))
+}
+
+if ("phd_instructors" %in% names(staff)) {
+  o <- "### PhD Instructors \n\n"
+  for(i in staff$phd_instructors) {
+    o <- paste0(
+      o,
+      glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email}\n\n")
+    )
+  }
+  cat(paste0(o, "\n\n"))
+}
+
+cat( glue::glue("---
+author: {authors}
+---"))
+```
+
+## Course Description
+
+Quantitative analyses are one of many 'ways of knowing', and one with particular
+
+## Canvas Site
+
+The Canvas site for the class can be found at `r meta$canvas`. Please consult that page for all assignments and readings that are not otherwise available to you.
+
+## Late Work
+
+Turning in assignments promptly is important both for keeping current with the subject matter, which is cumulative, and to keep all students on a relatively level playing field. A late assignment will be accepted for a loss of one letter grade (e.g., an A becomes a B).
+
+There will of course be situations where we are willing to bend these rules. These are regulatory ideals, not absolutes. We are human beings; you are human beings. Life happens. We will strive to respect you by taking your requests seriously if you similarly strive to not take advantage of our inclination to respect them. We’re all in this weird boat together---let’s be good to each other.
+
+## Attendance
+
+Attendance is worth 20% of your grade in this course. As in life, much of your success in this class depends on showing up. We will be taking attendance in lectures and recitations. (Students are required to go to one recitation per week.)
+
+That said, we recognize that there may be a variety of reasons for you to miss a lecture or lab session. Please let us 
+
+# Materials
+
+## Texts
+
+No! All readings are uploaded to the course Canvas site. In fact, many, if not all, of the texts are available digitally to MIT affiliates through the libraries, and those that will be made available to you on Canvas. Just remember this favor when you ask yourself how much of the reading to complete...
+
+We will be relying on the following primary texts for this course. The textbook is freely available.
+
+
+## Software
+
+In this course, we will be using entirely free and open source software (this is frequently abbreviated FOSS---for those of you who have taken GIS, QGIS is also FOSS). Primarily, we will be using the `R` statistical computing environment and the RStudio integrated development environment (frequently abbreviated IDE). What this means is that you'll be __writing code__. 
+
+For some of you, this may be your first time doing any computer programming at all---no problem! We don't assume prior experience, and we'll be spending quite a lot of time familiarizing you with how `R` thinks and helping you get a handle on the basics of programming. 
+
+For others, you may have programming experience but less statistical background---that's great! `R` is a full-featured programming language that can do everything your primary languages can do (Python, JavaScript, FORTRAN, whatever). Like all languages, it has its own idioms and quirks, but our hope is that you'll learn to love it. We certainly have.^[So much so that this syllabus was built using R!]
+
+In recent years, `R` programming has changed substantially with the introduction of new packages for preparing, slicing, dicing and visualizing data. Much of this travels under the banner of the so-called `tidyverse`; we'll be making extensive use of the `tidyverse` to simplify our lives and make our code more readable to ourselves and others.
+
+# Getting Help
+
+## Email
+
+We will not always be able to respond to email right away. If we have not answered an email by the next time we see you in class, feel free to remind us. We will do our best to respond to your emails in 24 hours during the week. Instructors do not respond to emails on the weekends. The labor movement fought long and hard to secure your weekend! It is truly remarkable that we live in a world in which an email can travel to space and divebomb from the exosphere to our pockets in a matter of seconds; this does not imply that our response must be equally instantaneous! 
+
+## Office Hours
+
+Each member of the teaching team will have their own office hours - because we have a large teaching team, this means that help will be available during a pretty astonishing proportion of the work week! __Please consult the top of the syllabus for specific times!__
+
+## The Documentation
+
+Using `RStudio` makes getting help with `R`-specific problems quite simple! Say your code is throwing an error on your use of the `dplyr` library's `filter` function. Simply type...
+
+```r
+# If you've loaded the dplyr packages with library(dplyr)
+?filter
+# If you want to be more explicit...
+?dplyr::filter
+```
+
+This will yield a screen listing the arguments you can pass to a given function and some examples of how it's used. This should usually be your first step in diagnosing a programming problem!
+
+## So What About ChatGPT?
+
+Generative AI, large language models... most of you will have heard of these by now, most of you will probably have used them by now. From an instructional standpoint, it is generally extremely difficult to detect when a student has used, for example, ChatGPT. 
+
+The facts are these: one of the things it is very good at is writing code, provided that you know how to ask the right questions. This is because the sites that programmers haunt to provide assistance to each other ([Stack Overflow](https://stackoverflow.com/) being the best-known) are among those used to train the language models, a fact which is starting to [play out in legal disputes](https://www.wired.com/story/stack-overflow-will-charge-ai-giants-for-training-data/). The point is: these things can write code for you and the teaching team will not, realistically, be able to detect it.
+
+So. We will not go so far as to issue a prohibition on the use of such software. __However:__ we ask that you try your very hardest before resorting to the use of e.g., ChatGPT. Much of learning how to program is learning how to be work through the difficult patches, where `R` keeps throwing a slightly mystifying error and you have to diagnose the problem. We'd suggest that your sequence look something like this:
+
+1. Try your hardest to write the code yourself.
+2. Ask one of your colleagues what your issue might be, so that they can experience the learning benefits of explaining something to someone else.
+3. Ask a member of the teaching team.
+4. Failing all else, ask ChatGPT.
+
+```{r, child='mit_required.md'}
+```
+
+## On Mental Health...
+
+Academic environments are taxing places. For reasons structural, institutional, financial, and interpersonal, they do not always lend themselves to what most reasonable people would think of as human flourishing. Your instructors went to, or are going, to graduate school. In fact, I (Eric) went to graduate school twice. We also went to college. We are intimately familiar with the toll that institutions of higher education can exact on our mental health and well-being.
+
+We have two points here: 
+
+1. MIT offers a range of counseling and mental health resources for students. We would really encourage you to be proactive about taking advantage of them; and 
+2. Do not hesitate to let us know if you’re struggling. It is not our intention to mine for the details of your private lives! It is only to let you know that we are sensitive to the distinctive difficulties of the environment we inhabit and that help is available.
+
+
+# Schedule
+
+```{r echo=FALSE, results="asis"}
+start <- as.Date(meta$first_class)
+
+format_date <- function(date) {
+  format(
+    date,
+    format = "%m/%d"
+  )
+}
+
+week_desc <- function(start, week) {
+  mon <- format_date(
+    lubridate::floor_date(start, "week", 1)
+  )
+  fri <- format_date(
+    lubridate::ceiling_date(start, "week", week_start = 5)
+  )
+  paste("Week ", week, sep='', ", " , mon, "--", fri)
+}
+
+dow_convert <- function(dow) {
+  if (dow=="Monday") {
+    1
+  } else if (dow=="Tuesday") {
+    2
+  } else if (dow=="Wednesday") {
+    3
+  } else if (dow=="Thursday") {
+    4
+  } else if (dow=="Friday") {
+    5
+  } else if (dow=="Saturday") {
+    6
+  } else if (dow=="Sunday") {
+    7
+  }
+}
+
+misses <- 0
+
+lecture <- function(start = start, lec, offset = 0, title = "Lorem Ipsum") {
+  lec_miss <- lec + misses
+  lec_per_week <- length(meta$lectures)
+  week <- ceiling(lec_miss / lec_per_week)
+  lec_in_week <- lec_miss - ((week - 1) * lec_per_week)
+  day <- dow_convert(meta$lectures[[lec_in_week]]$day)
+  
+  miss_days <- as.Date(meta$miss_days)
+  
+  if(day == lubridate::wday(start, week_start = 1) + offset) {
+    date <- lubridate::floor_date(
+      start + offset + 7 * (week - 1),
+      "week",
+      week_start = day
+      )
+  } else {
+    date <- lubridate::ceiling_date(
+      start + offset + 7 * (week - 1),
+      "week",
+      week_start = day
+      )
+  }
+  
+  lec_day_text <- lubridate::wday(date, label = TRUE, abbr = FALSE)
+  
+  if (date %in% miss_days) {
+    misses <<- misses + 1
+  }
+  cat(glue::glue("## Lecture {lec}: {lec_day_text} {format_date(date)}\n\n
+
+               ### {title}\n\n
+
+               "))
+}
+
+schedule <- yaml::read_yaml(file = "schedule.yaml")
+
+for (class in schedule) {
+    lecture(start, lec = class$lec, title = class$title, offset = 0)
+    # if ("readings" %in% names(class)) {
+    #   get_zotero(class$readings)
+    #   cat("\n\n")
+    # }
+  }
+
+cite <- function(key, bib) {
+  # create a silent reference so RefManageR
+  # knows we've used this entry
+  RefManageR::NoCite(bib, key)
+  # create the string we need in the Markdown document
+  # paste0("[^", key, "]")
+}
+
+get_zotero <- function(library, user = meta$zotuser) {
+  tmp_bib <- tempfile()
+  url <- glue::glue("https://api.zotero.org/users/{user}/collections/{library}/items/top")
+  result <- httr::GET(
+      url,
+      query = list(
+        format="biblatex",
+        v="3"
+        )
+    ) |>
+    httr::content("text", encoding="UTF-8") |>
+    cat(file = tmp_bib)
+  
+  bib <- RefManageR::ReadBib(tmp_bib, check = FALSE)
+  
+  for (c in names(bib)) {
+    cite(c, bib)
+  }
+  
+  file.remove(tmp_bib)
+  
+  RefManageR::PrintBibliography(
+    bib, 
+    .opts = list(
+      # bib.style = "authoryear",
+      dashed = TRUE,
+      first.inits = FALSE
+      )
+    )
+}
+
+build_schedule <- function(schedule) {
+  for (class in schedule) {
+    lecture(start, lec = class$lec, title = class$title, offset = 0)
+    # if ("readings" %in% names(class)) {
+    #   get_zotero(class$readings)
+    #   cat("\n\n")
+    # }
+  }
+}
+
+# test<- get_zotero("D82QEDI7")
+build_schedule(schedule)
+
+```

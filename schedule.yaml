@@ -1,0 +1,54 @@
+---
+- lec: 1
+  title: 'Introduction: Why Are We Here?'
+  topics: ['course overview', 'episemological foundations', 'sampling and data']
+  readings: "4BXGD2BU"
+- lec: 2
+  title: 'Population Distributions'
+  topics: ['course overview', 'episemological foundations']
+  readings: "FPWIZMC2"
+- lec: 3
+  title: 'Centrality & Dispersion'
+  topics: ['course overview', 'episemological foundations']
+  readings: "S7WZVRLK"
+- lec: 4
+  title: 'Sampling & Probability'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 5
+  title: 'Random Variables'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 6
+  title: 'The Normal Distribution'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 7
+  title: 'Central Limit Theorem'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 8
+  title: 'Confidence Intervals'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 9
+  title: 'Hypothesis Testing'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 10
+  title: 'Chi-Squared Tests'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 11
+  title: 'Bivariate Linear Regression'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 12
+  title: 'Multi-Variate Regression'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+- lec: 13
+  title: 'Logistic Regression'
+  topics: ['course overview', 'episemological foundations']
+  readings: "TUZTYU3I"
+  

@@ -1,0 +1,32 @@
+---
+title: "Equal Protection and the Fair Housing Act"
+subtitle: "Assignment 1"
+output: 
+  pdf_document: 
+    template: syllabus.latex
+---
+
+## Introduction: Housing Vouchers
+
+To help low-and moderate-income households, individuals with disabilities, and other vulnerable groups secure stable housing, federal, state, and local governments have created a number of housing voucher or subsidy programs.  These housing voucher programs differ in their eligibility requirements and the details of their operation, but have several shared characteristics.
+
+First, the programs are designed so that households can select in the private rental market their own homes that meet the program’s quality standards.  Second, the subsidies in the programs are generally based on a local “payment standard” or “fair market rent” that reflects the cost to lease a unit in the local housing market.   Third, some programs require households to pay some portion of their income (usually 30%) in rent, while others will pay up to the whole value of the rent.  Fourth, the agency administering the voucher program assesses participants’ household income to determine the participant’s eligibility and share of the rent, if any, and the agency then enters into a contract with the landlord to make guaranteed rental subsidy payments directly to the landlord for all of the rent or for the remaining portion after a tenant’s payment.   If the household has no income, the program usually pays the full rental amount up to the local payment standard or the remaining rent after a nominal contribution from the tenant.   These general policies mean that voucher payments to landlords are contractually guaranteed by the agency.  The policies further mean that the voucher administrator ensures that a tenant payment is generally limited to 30 percent of the household’s income (adjusted for dependents, disabled family members, childcare expenses, etc.) or less. 
+
+From a policy perspective, housing subsidies are generally understood to serve at least two crucial goals: 1) helping households with low-incomes afford housing and thereby reducing residential instability and homelessness, while also leaving households with enough residual income to meet their basic needs; and 2) helping low-income households have more choices about where they live, increasing the opportunity to access, if they choose, neighborhoods with lower-poverty rates and more place-based resources.
+
+## Paul Property Owner Policy A
+Paul Property Owner applies a test to assess the income eligibility of prospective tenants.  
+Paul Property Owner requires that tenants have a gross annual income greater than or equal to 40 times the monthly rent.  
+For applicants with vouchers, Paul Property Owner adds the monthly value of the voucher, multiplied by 12, to the tenant’s gross annual income. 
+
+### Question for You!
+
+Does this policy treat applicants with vouchers fairly?  If so, why?  If not, why not?  Answer (1) in words, and (2) with algebra and/or a hypothetical mathematical example or examples
+
+Paul Property Owner changes his policy 
+Now, tenants must have a rent to net income ratio no greater than 40 percent (i.e. monthly rent must be less than or equal to 40% of their net income). Net income is calculated by  subtracting taxes and debt service from gross income, and Paul Property Owner just multiplies gross income by 0.7 to arrive at net income.  
+Tenants with a voucher that pays part of their rent must demonstrate that they have a rent to net income ratio for the portion of the monthly rent that they are paying that is no greater than 40 percent, as for no-subsidy applicants.  Tenants with a voucher paying all of their rent have to meet the other screening criteria (credit score, eviction history, criminal background history).
+
+### Another Question!
+
+Does this policy towards households with vouchers that pay part of their rent treat these applicants fairly?  If so, why?  If not, why not?  Answer (1) in words, and (2) with algebra and/or a hypothetical mathematical example or examples.

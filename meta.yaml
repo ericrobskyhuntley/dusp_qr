@@ -1,0 +1,48 @@
+---
+canvas: https://canvas.mit.edu/courses/24163
+lectures:
+  - day: Tuesday
+    time: "11:00 AM--12:30 PM"
+    room: "4-163"
+  - day: Thursday
+    time: "11:00 AM--12:30 PM"
+    room: "4-163"
+recitations:
+  - day: Tuesday
+    time: "3:30--4:30 PM"
+    room: "4-163"
+  - day: Tuesday
+    time: "4:30--5:30 PM"
+    room: "4-163"
+  - day: Wednesday
+    time: "3:00--4:00 PM"
+    room: "4-163"
+  - day: Wednesday
+    time: "4:00--5:00 PM"
+    room: "4-163"
+  - day: Thursday
+    time: "10:00--11:00 AM"
+    room: "4-163"
+staff:
+  instructors:
+  - name: Eric Robsky Huntley, PhD
+    title: Lecturer in Urban Science and Planning
+    pronouns: they/them
+    email: ehuntley@mit.edu
+    office: 9-545
+  phd_instructors:
+  - name: Chenab Navalkha
+    title: PhD Student
+    pronouns: she/her
+    email: chenab@mit.edu
+  - name: Nishan Zewge-Abubaker
+    title: PhD Student
+    pronouns: she/her
+    email: nishanz@mit.edu
+  - name: Mary Louise Chatters Taylor
+    title: PhD Student
+    pronouns: she/her
+    email: marytayl@mit.edu
+zotuser: 2395373
+first_class: "2024-02-06"
+miss_days: ["2024-02-20"]

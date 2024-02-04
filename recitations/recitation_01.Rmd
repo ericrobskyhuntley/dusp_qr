@@ -1,0 +1,552 @@
+---
+title: "Introduction to R"
+subtitle: "Recitation 1"
+author: "Eric Robsky Huntley, PhD"
+thanks: "This is a substantial extension and rewrite of material originally developed by Jeff Rosenblum and subsequently revised by Ben Preis."
+output: 
+  pdf_document: 
+    template: "../syllabus.latex"
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  hold=TRUE,
+  warning = FALSE,
+  message = FALSE,
+  size = 'huge'
+  )
+```
+
+# Install R and RStudio
+
+We'll begin by setting up `R` and `RStudio`. What, might you ask, is the difference? Glad you asked!
+
+`R` is an open-source programming language based on the commercial `S` language. It is available under a GNU license, a so-called 'copy-left' lisence that permits the free use, reuse, and modification of software. It provides access to innumerable packages through `CRAN` (the Comprehensive R Archive Network), which extends its functionality into essentially any domain you may be interested in. However, `R` is just a language, and it can be quite cumbersome to interact with it on its lonesome.
+
+That's where `RStudio` comes in---it's developed by Posit, a Boston-based data science company, and provides, for my money, the best Integrated Development Environment (IDE) for data science that I'm aware of. It allows us to write code and see and interact with the results immediately in an intuitive interface.
+
+So: essentially, `R` is the brain, but `RStudio` is the face that we'll be using to develop and interact with `R`.
+
+## Install `R`
+
+First, we need `R`. Navigate to <https://cran.rstudio.com/> and click on the link for your operating system. You should install the latest release, which is `4.3.2` (nicknamed "Eye Holes") as of this writing.
+
+### For Windows Users...
+
+You want the `base` distribution! Follow directions! (The defaults are fine in this case).
+
+### For macOS Users...
+
+You need to know whether you have an M1/M2 or Intel Mac. To check, click on the Apple icon in the upper-left corner of your screen and choose "About this Mac." If the Chip includes M1 or M2, you should use that download. Otherwise, use the Intel link. Follow directions! (The defaults are fine in this case).
+
+## Install `RStudio`
+
+Navigate to <https://posit.co/download/rstudio-desktop/>. Click the "Download RStudio" button and follow directions.
+
+# Getting to Know R
+
+## Objects and Functions
+
+### Assigning Values to Objects
+
+In programming, one of the most basic tasks is to store a value for reference later. This involves creating an "object," which is pretty much the same thing as a "variable" in common usage---think of it as a box you in which you can store values.
+
+We can assign values of many types!
+
+```{r}
+# Assign a number to the dusp_course object.
+dusp_course <- 11
+
+# Note that this is a 'comment!' The hash symbol 
+# indicates that any text that follows is not to be
+# run or interpreted as code.
+
+# Assign characters to an object.
+city_name <- "Cambridge"
+
+# Note that computers call characters a 'string'.
+
+# Assign a boolean (AKA TRUE/FALSE, AKA binary) value to an object.
+r_is_enjoyable <- TRUE
+```
+
+In `R`, there are two ways to assign a value: the **assignment operator** (`<-`) and the **equals sign** (`=`). There are reasons for this---in short, `<-` is a bit more "R-ish" because, historically, `=` was reserved for setting values in functions. But since 2001 either has worked so, really, it is a matter of personal preference. I use the assingment operator, because it's in my muscle memory, but `=` is more common in other languages (e.g., Python). Just pick one!
+
+You can then reference these values! Call them (meaning, execute a line with just the object name) and see the results.
+
+```{r}
+dusp_course
+city_name
+r_is_enjoyable
+```
+
+We can then see what class (or data type) each object is like so...
+
+```{r}
+class(dusp_course)
+class(city_name)
+class(r_is_enjoyable)
+```
+
+### Functions
+
+We just used our first base R function! When you see something like `function_name(...)`, that indicates that you're taking some action based on the objects passed into the function. `class()` simply returns the data type of an R object. Let's do a little math... find the square root of a number!
+
+```{r}
+sqrt(27)
+```
+
+We passed the number `27` to the base R `sqrt()` function, which basically does what it says on the box: it calculates a square root. We could have also passed in a numeric object:
+
+```{r}
+sqrt(dusp_course)
+```
+But functions are picky! If we try to pass in the wrong data type, `R` will let us know that we've displeased it.
+
+```{r, error=TRUE}
+sqrt(city_name)
+```
+
+Ah! We throw an error in which R informs us that non-numeric arguments do not work here. Let's try one more...
+
+```{r}
+sqrt(r_is_enjoyable)
+```
+
+Wait a minute: but `r_is_enjoyable` is a boolean (TRUE/FALSE)---what's going on here? Well, booleans are _coercable_ to numeric values. `R` understands `TRUE` to equal `1` and `FALSE` to equal `0`. You'll develop an intuition for these things over time as you encounter more things like this.
+
+## How do you know what a function does?
+
+If you want to know what a function does, use the question-mark symbol before the function in the console: `?sqrt`.
+
+```{r eval = FALSE}
+?sqrt
+```
+
+```{r echo = FALSE, messages = FALSE, warning = FALSE}
+output_help <- function(func_name) {
+  temp_file <- tempfile(fileext = ".txt")
+  utils:::.getHelpFile(as.character(help("sqrt"))) |>
+    tools::Rd2txt(out = temp_file)
+  temp_file |>
+    readLines() |>
+    stringr::str_c(collapse="\n") |>
+    stringr::str_replace_all("_\b", "") |>
+    cat()
+}
+
+output_help("sqrt")
+```
+
+This tells you how to use the `sqrt()` function---it takes one argument, `x` that is "a numeric or complex vector or array"---and also gives you some examples at the bottom. The documentation is your friend!
+
+## Simple Math
+
+Math in `R` is pretty straightforward! For example, let's store a number in an object and multiply it by 3, assigning the result to a new object.
+
+```{r}
+x <- 3
+y <- x * 3
+print(y)
+```
+
+Division, addition, multiplication, subtraction, etc. all work the same way.
+
+## Object Conversion
+
+`dusp_course` is stored as a number. But in some ways, that doesn't make much sense---while course numbers are _numbers_, they are not really _ordinal_ in any meaningul way. In other words, multiplying or dividing the course number doesn't make much sense. For those of you who have worked with census data in a GIS, this is the same kind of problem as we face with FIPS codes and GEOIDs---while they are made up of numbers, they're better treated as text because they often hold leading zeroes (and dividing them, adding to them, etc. doesn't really have any meaning).
+
+Let's perform a conversion!
+
+```{r}
+dusp_course
+dusp_course_str <- as.character(dusp_course)
+dusp_course_str
+```
+
+While both of these values are `11`, they are different. One is text, the other is a number. 
+
+```{r, error=TRUE}
+dusp_course_str - 10
+```
+
+Though R is smart here: if we test them for equality, R will try to coerce them into the same object type, meaning that they appear identical.
+
+```{r}
+dusp_course == dusp_course_str
+```
+
+## Concatenating Strings
+
+Let's say we want to add on to our new `dusp_course_str` object. Combining multiple strings is called `concatenation` (think about the Excel `CONCAT()` function). In base `R`, we can do this using using the `paste` or the `paste0` functions. These think a little differently! Let's try them out.
+
+```{r}
+dusp_text <- "At MIT, DUSP is course"
+paste(dusp_text,dusp_course)
+paste0(dusp_text,dusp_course)
+```
+
+You see that the `paste` automatically inserts a space between the provided strings, while `paste0` does not. `paste()` is more flexible than `paste0()`: let's try passing a **parameter** to the function.
+
+```{r}
+paste(dusp_text, dusp_course, sep=" ")
+```
+
+Here, we tell `paste()` to use a space to separate (thus, `sep`) the strings. We could use any character!
+
+```{r}
+paste(dusp_text, dusp_course, sep="???")
+```
+
+## Vectors
+
+A series of objects is called a vector, which is created by use of the `c()` function. 
+
+```{r}
+states <- c("MA","UT","MD","OH","ND")
+states
+```
+
+You can ask for a specific item in your vector! Let's say we want the third state...
+
+```{r}
+states[3]
+```
+
+...or to know whether Maryland is in our list...
+
+```{r}
+"MD" %in% states
+```
+
+Note that we just introduced another operator! `%in%` tests whether a given value---here, the string "MD"---is in an array. You'll notice it returns a boolean value---we just implemented a truth test, which evaluates whether a given condition is met. Truth tests are very important in programming, as, often, you'll have to do something that takes the form `if (this) {action 2} else if (this_other_thing) {action 2} else {action 3}`. These are called conditional branches and will show up all over the place!
+
+## Manipulate a Vector
+
+Above, we defined the vector `states`. Let's say we wanted to append a given bit of text to each element. We can use `paste` to do this!
+
+```{r}
+paste(states, "is lovely", sep=" ")
+```
+
+Note that paste performed the same operation over all items in the vector. This is because many functions in `R` are vectorized, which is that they are set up to expect to transform entire series of values at once.
+
+Of course, you may have expected something else. Why didn't `paste` paste together all elements of the array?
+
+We can do this using the `collapse` parameter instead of the `sep` parameter. Collapse creates a single string from all elements of a vector.
+
+```{r}
+paste(states, collapse=", ")
+```
+
+## Creating a Vector of Numbers
+
+Let's say you wanted a vector of every number between 1 and 10. You could do it manually...
+
+```{r}
+c(1,2,3,4,5,6,7,8,9,10)
+```
+
+But! Programming is all about finding ways to do common things automatically or with less effort. `R` gives you a different syntax for automatically generating a sequential vector of integers.
+
+```{r}
+1:10
+```
+
+But, of course, you may also have to create a list of numbers that are not sequential---maybe they're regularly spaced! Let's generate a list of numbers between two and ten, incrementing by 2.
+
+```{r}
+seq(2,10,by=2)
+```
+
+## Summarizing a Vector
+
+A vector of numbers has _properties_. For example, how long is it? What is the average or median? What's the largest number in it? In sequence, we can answer these questions like so:
+
+```{r}
+sequence <- seq(2,10,by=2) 
+length(sequence)
+mean(sequence)
+median(sequence)
+max(sequence)
+```
+Now we're doing summary statistics! Let's go one step further. Let's say we want to know the percent of the total that is represented by each vector element.
+
+First, find the sum...
+
+```{r}
+total <- sum(sequence)
+```
+
+Now we simply divide the vector by the total.
+
+```{r}
+sequence/total
+```
+
+You could even reduce the number of lines of code and do this in a single line...
+
+```{r}
+sequence / sum(sequence)
+```
+
+## Data Frames
+
+So far, we've introduced single-element objects (where the object contains a single value) and arrays (where the object contains multiple values). You can think of these like a _cell_ and a _column_ in a spreadsheet, respectively. But how do we represent a two-dimensional dataset in `R`? I.e., one that includes rows, usually depicting things in the world, and columns, usually describing the attributes of those things.
+
+The answer is with **data frames**, which you can think of as being very similar to a single table in a spreadsheet application. To get a clearer sense of what that means, let's construct a sample dataframe, noticing that each column is just a vector. This is occupancy data drawn from the 2018-2022 American Community Survey 5-year estimates.
+
+We can begin by constructing arrays depicting municipality names, and the numbers of occupied, renter-occupied, and owner-occupied untis.
+
+```{r}
+# Municipality Name
+names <- c("Boston", "Cambridge", "Somerville")
+# Occupied Housing Units
+occ_units <- c(276053, 49475, 35035)
+# Renter-Occupied Housing Units
+rent_units <- c(179867, 32870, 23252)
+# Owner-Occupied Housing Units
+own_units <- c(98186, 16605, 11783)
+```
+
+We can then use the `data.frame()` function to construct a dataframe. We pass the four above vectors to the dataframe. We can do this one of two ways: we could store the municipality names as just another column of data _or_ use them as the row names.
+
+```{r echo = FALSE}
+df_unnamed <- data.frame(
+  names,
+  occ_units,
+  rent_units,
+  own_units
+)
+
+df_named <- data.frame(
+  occ_units,
+  rent_units,
+  own_units,
+  row.names = names
+)
+```
+
+We could also be more concise by writing all of this in a single command:
+
+```{r}
+df_named <- data.frame(
+  occ_units = c(276053, 49475, 35035),
+  rent_units = c(179867, 32870, 23252),
+  own_units = c(98186, 16605, 11783),
+  row.names = c("Boston", "Cambridge", "Somerville")
+)
+```
+
+This is personal preference! Many programmers will emphasize conciseness and try to build code that runs in as few lines as possible. This is fine, but if at some point it helps you to split your code into multiple lines where one could do, _do that_. For our purposes, good code is code that you understand.
+
+What all of this should emphasize is that a `data.frame` is simply a collection of vectors that have the same length. In other words, a table is just a series of columns, each of which is a vector of values of equivalent length. This is key to understanding how `R` works: `R` thinks in terms of vectors.
+
+Now view these dataframes by either entering `View({Data Frame Name})` in the console, or by clicking on it in the RStudio environment. In RStudio, your `Environment` pane is your friend--- you can click the arrow to the left of the name to see all of its columns, or click the name itself to open the table. This is why we use RStudio! All of this would be much more cumbersome without an Integrated Development Environment (again, IDE). 
+
+When we provided names, it gave each row a name and does not think of that value as a variable; when we did not, the municipality is just another column. Let's examine the implications here. Let's try to select Cambridge, first in the `df_named` dataframe.
+
+```{r echo = FALSE}
+df_named["Cambridge",]
+```
+
+Nice! We could also select more than one municipality, like so...
+
+```{r echo = FALSE}
+df_named[c("Cambridge", "Somerville"),]
+```
+
+The bracket syntax (`[rows, cols]`) is how `R` selects rows and columns. When one isn't specified, it's interpreted to mean 'all rows' or 'all columns.' So `df_named[c("Cambridge", "Somerville"),]` is interpreted as "give me the rows named 'Cambridge' and 'Somerville' with all of their columns."
+
+Let's try to select Cambridge on the unnamed dataframe.
+
+```{r echo = FALSE}
+df_unnamed["Cambridge",]
+```
+
+Huh! It didn't return anything. That's because there's no such thing as a row called "Cambridge"---there is only a row with the `names` value `"Cambridge"`. So to select, we'd have to use slightly more cumbsersome syntax.
+
+```{r echo = FALSE}
+df_unnamed[df_unnamed$names=="Cambridge",]
+```
+
+Not necessarily a bad thing, but two ways of solving the same problem under different conditions. It also introduces a new bit of `R` syntax: the `$` is used to select columns on a `dataframe`.
+
+### Filtering
+
+This latter introduces _filtering_. We say, "show me all columns where a condition is met." We can look under the hood by executing the query on its own.
+
+```{r}
+df_unnamed$names=="Cambridge"
+```
+
+This returns a vector of a length equal to the number of rows in the dataframe with boolean conditions (again, `TRUE`/`FALSE`) for each row. This is used to filter out rows where the condition is `FALSE`. Let's try one more on the named dataframe, finding rows with a number of occupied units greater than 45,000.
+
+```{r}
+df_named[df_named$occ_units > 45000,]
+```
+
+We see that both Boston and Cambridge have more than 45,000 housing units, but not Somerville.
+
+### Previewing and Summarizing a Dataframe
+
+To preview a dataframe and get a sense of its contents without having to dig through the entire thing, we can use the `head()` function. By default, this will return the first 6 rows of a dataframe, though you can adjust this with the `n` parameter.
+
+```{r}
+head(df_named)
+```
+
+We have fewer than 6 rows so all are returned. Let's use the n parameter to return fewer. Again, _parameters_ are how you control functions---it's reasonable to think of them as 'settings'. You can change a function's behavior by changing its settings.
+
+```{r}
+head(df_named, n = 2)
+```
+
+To get summary statistics about the data frame and its columns, we can use the `summary()` function. This returns key statistics about each column: minima, maxima, mean, median, quartiles, etc. We'll dig into summary statistics more next week! For now, let's pass the `df_unnamed` object to the function to see how it behaves with columns of different types.
+
+```{r}
+summary(df_unnamed)
+```
+
+You'll see that it can't return numeric summary statistics for the `names` column because it is stored as a string. `summary()` automatically adjusts its behavior depending on the data that is stored in each column.
+
+### Creating a New Column
+
+Currently, we have counts of occupied units, renter-occupied units, and owner-occupied units. One obvious thing we might want to do is calculate the percentage of units that are, for example, renter-occupied. To do so, we can create a new column on our dataframe, based on the total unit count and a count of renter-occupied units. We'll do this in two ways: the 'old `R`' way and the 'modern `R` way.
+
+#### The Classic Way
+
+In classic R syntax, we can set the value of a new column like so:
+
+```{r}
+df_named$rent_pct <- (df_named$rent_units / df_named$occ_units) * 100
+```
+
+On the left, we specify a column that does not yet exist (`rent_pct`) on our `df_named` dataframe. We then assign (`<-`) a vector to it, which is the result of dividing the `rent_units` column by the `occ_units` column, both on the `df_named` dataframe. Finally, we multiply by 100 to transform the proportion to a percentage. If you view the dataframe, you'll see that there is a new column that is the result of dividing the two columns.
+
+Here's the thing, though: if we wanted to do this many times, the syntax gets a little duplicative. Let's say that we wanted to calculate both the percentage of units that are renter-occupied _and_ the percentage of units that are owner-occupied.
+
+```{r}
+df_named$rent_prop <- (df_named$rent_units / df_named$occ_units)
+df_named$rent_pct <- df_named$rent_prop * 100
+```
+
+Many contemporary `R` users find this syntax a little cumbersome (myself included). And so many prefer to use a collection of `R` packages that are together called the [`tidyverse`](https://www.tidyverse.org/). The goal of these is to create a consistent syntax for transforming and manipulating data. I'm going to be a strong advocate for the `tidyverse` throughout this class: it goes a long way towards making code readable (to yourself and others) and once you get the hang of it, it makes writing `R` a pleasure.
+
+#### The `tidyverse` Way
+
+So. What do we do? First, install the [`tidyverse`](https://www.tidyverse.org/).
+
+```{r eval=FALSE}
+install.packages("tidyverse")
+```
+
+`install.packages()` is how you extend `R`'s functionality using packages from one of several existing repositories (the largest being `CRAN`, or the Comprehensive R Archive Network).
+
+The most common way of proceeding is by loading the entirety of the package, which is done using the `library()` function, where a given `R` library that is installed is passed to the function. (I'll touch on the other, slightly more complicated, but often more reliable, way of doing things in the final, optional section.)
+
+```{r}
+library(tidyverse)
+```
+
+Once you've loaded the `tidyverse`, you have access to a _huge_ number of new functions that make processing data easier. One of the basic functions is `mutate()`, which does exactly what we were doing above: creates new columns (or redefines old ones) on the basis of other column values. For example: let's calculate those percentages and proportions we calculated above.
+
+```{r}
+df_named <- mutate(
+  df_named,
+  # Works like df_named$rent_prop <- (df_named$rent_units / df_named$occ_units)
+  rent_prop = rent_units / occ_units,
+  # Works like df_named$rent_pct <- df_named$rent_prop * 100
+  rent_pct = rent_prop * 100
+)
+```
+
+You'll notice a few advantages here: first, all of those individual times we indicated that our columns should column from `df_named` are unnecessary. The `tidyverse` assumes that any names we give it are columns in the table at hand. Also, the syntax makes it clearer that all of these are transformations done to the `df_named` table, which is passed to the first argument of the `mutate()` function.
+
+## Using Pipes
+
+One final thing: a lot of contemporary `R` code relies heavily on 'piping', which is a syntax that allows for very readable code when you're doing a series of data processing steps. Let's say we wanted to calculate those columns as above, but then sort the dataframe such that the towns with the highest percentages of renter-occupied units are at the top. We _could_ do this like so, with the addition of the `arrange` function, also from the `tidyverse`...
+
+```{r}
+df_named <- mutate(
+  df_named,
+  rent_prop = rent_units / occ_units,
+  rent_pct = rent_prop * 100
+)
+
+# Sort the dataframe using the `rent_pct` column in descending order.
+df_named_sorted <- arrange(df_named, desc(rent_pct))
+```
+
+But we could also do this as follows, without storing any intermediate variables.
+
+```{r}
+# Take the `df_named` dataframe...
+df_named <- df_named |>
+  # Pass it to mutate()
+  mutate(
+    # Calculate new columns
+    rent_prop = rent_units / occ_units,
+    rent_pct = rent_prop * 100
+  ) |>
+  # Pass results of mutate to arrange, sorting by percentage 
+  # of renter-occupied units in descending order.
+  arrange(desc(rent_pct))
+```
+
+Look at what the `|>` operator is doing! Each time it appears, it's saying "pass the result of this line into the first argument of the function on the next line." This means that the data processing workflow reads very nicely as a series of steps taken. As one final addition: remember when we introduced filtering and selecting columns above? The `tidyverse` give you very readable ways to do those things too. Let's say we wanted to return...
+
+1. only those rows with more than 45,000 housing units, and 
+2. only those columns containing the municipality name and the percentage of rental units.
+
+```{r}
+# Take the `df_named` dataframe...
+df_named |>
+  # Filter out municipalities with fewer than 45,000 occupied units.
+  # (This is like df_named[df$occ_units > 45000,].
+  filter(
+    occ_units > 45000
+  ) |>
+  # Pass it to mutate()
+  mutate(
+    # Calculate new columns
+    rent_prop = rent_units / occ_units,
+    rent_pct = rent_prop * 100
+  ) |>
+  # Pass results of mutate to arrange, sorting by percentage 
+  # of renter-occupied units in descending order.
+  arrange(desc(rent_pct)) |>
+  # This is like df[,'rent_pct']
+  # Note that the names are retained!
+  select(rent_pct)
+```
+
+That's a whole series of data processing steps, all collapsed into a very readable, line-by-line workflow. 
+
+I know that this was a lot. But we've really covered the basics of R syntax at this point. We'll continue to expand on our knowledge over the course of the half-semester. For the curious: I include a last thing here that might make your code make more sense to you and others. It's optional, and I don't expect you to follow it, but it's something I've started doing as standard practice and you could too, if you'd like.
+
+## Explicit Namespacing
+
+`R` has many, many packages. This is great---it means that, if you want to do something, there's a good chance some `R` users have built a package that does it. _However._ It also means that there's a good chance that multiple packages can use the same function name. This can get confusing, and they can run into each other. One way to ensure that you never run into this is to use what we'd call 'explicit namespacing'---what that means is that you indicate, every time you call a function, what package it is coming from. This is done using the `library::function()` syntax. For example, let's rewrite the above using explicit namespacing.
+
+Before we do, I should note that we loaded `tidyverse` as one big packages, but it's actually many packages. One of them is `dplyr` (officially pronounced 'dee-ply-er', though I'll often catch myself saying 'deep layer'), which is actually the package that includes all of the functions we wrote above. So if we wanted to write the above with explicit namespacing:
+
+```{r}
+df_named |>
+  dplyr::filter(
+    occ_units > 45000
+  ) |>
+  dplyr::mutate(
+    rent_prop = rent_units / occ_units,
+    rent_pct = rent_prop * 100
+  ) |>
+  dplyr::arrange(dplyr::desc(rent_pct)) |>
+  dplyr::select(rent_pct)
+```
+
+If you need to find out which package a function is from, simply consult its documentation (e.g., `?arrange`).
+
+Again, no pressure, but this is how I've started to write my R code!
