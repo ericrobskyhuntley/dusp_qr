@@ -24,7 +24,7 @@ meta <- yaml::read_yaml(file = "meta.yaml")
 
 # Course Information
 
-> The late poet-warrior, Audre Lorde, warned that the master's tools will never dismantle the master's house. [...] The issue is not whether the master uses, or endorses the use of, some tool or another. Rather, who controls the conditions and the ends to which any tools are weilded? [...] If the master loses control of the means of production, he is no longer the master. [@gilmore_public_2022, 79]
+> The late poet-warrior, Audre Lorde, warned that the master's tools will never dismantle the master's house. [...] The issue is not whether the master uses, or endorses the use of, some tool or another. Rather, who controls the conditions and the ends to which any tools are wielded? [...] If the master loses control of the means of production, he is no longer the master. [@gilmore_public_2022, 79]
 
 Which is to say: welcome to quantitative reasoning and statistical methods for planners.
 
@@ -153,7 +153,9 @@ Using `RStudio` makes getting help with `R`-specific problems quite simple! Say 
 ?filter
 # If you want to be more explicit...
 ?dplyr::filter
+
 ```
+
 
 This will yield a screen listing the arguments you can pass to a given function and some examples of how it's used. This should usually be your first step in diagnosing a programming problem!
 
