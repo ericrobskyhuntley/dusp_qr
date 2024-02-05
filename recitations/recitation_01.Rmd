@@ -5,7 +5,7 @@ author: "Eric Robsky Huntley, PhD"
 thanks: "This is a substantial extension and rewrite of material originally developed by Jeff Rosenblum and subsequently revised by Ben Preis."
 output: 
   pdf_document: 
-    template: "../syllabus.latex"
+    template: "../templates/syllabus.latex"
 ---
 
 ```{r setup, include=FALSE}

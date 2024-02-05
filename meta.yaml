@@ -30,19 +30,32 @@ staff:
     pronouns: they/them
     email: ehuntley@mit.edu
     office: 9-545
+    office_hours: 
+    - day: Wednesday
+      time: "4:30--6:30 PM"
+      room: "9-554 (CRON Lab)"
   phd_instructors:
   - name: Chenab Navalkha
     title: PhD Student
     pronouns: she/her
     email: chenab@mit.edu
+    office_hours: 
+    - day: Tuesday
+      time: "2:00--4:00 PM"
   - name: Nishan Zewge-Abubaker
     title: PhD Student
     pronouns: she/her
     email: nishanz@mit.edu
+    office_hours: 
+    - day: Tuesday
+      time: "9:00--11:00 AM"
   - name: Mary Louise Chatters Taylor
     title: PhD Student
     pronouns: she/her
     email: marytayl@mit.edu
+    office_hours: 
+    - day: Friday
+      time: "4:00--6:00 PM"
 zotuser: 2395373
 first_class: "2024-02-06"
 miss_days: ["2024-02-20"]

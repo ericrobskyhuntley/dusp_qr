@@ -7,14 +7,14 @@ thanks: "This syllabus was built atop, benefitted immensely from, and owes a gre
 numbersections: true
 secnumdepth: 2
 colorlinks: true
-toc: true
+toc: false
 toc-depth: 2
 linkcolor: red
 citecolor: red
 urlcolor: red
 output:
   pdf_document: 
-    template: syllabus.latex
+    template: 'templates/syllabus.latex'
 ---
 
 ```{r setup, include=FALSE}
@@ -31,27 +31,30 @@ Which is to say: welcome to quantitative reasoning and statistical methods for p
 ## Schedule
 
 ```{r echo=FALSE, results = "asis"}
-if ("lectures" %in% names(meta)) {
-  o <- "### Lectures \n\n"
-  for(i in meta$lectures) {
-    o <- paste0(
-      o,
-      glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
-    )
+session_time_loc <- function(name, note = "") {
+  if (name %in% names(meta)) {
+    o <- glue::glue("### {stringr::str_to_title(name)} \n\n")
+    if (length(note) > 0) {
+      o <- stringr::str_c(o, note, "\n\n")
+    }
+    for(i in meta[[name]]) {
+      if (!("room" %in% names(i))) {
+        i$room <- "Room TBD"
+      }
+      o <- stringr::str_c(
+        o,
+        glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
+      )
+    }
+    cat(stringr::str_c(o, "\n\n"))
   }
-  cat(paste0(o, "\n\n"))
 }
 
-if ("recitations" %in% names(meta)) {
-  o <- "### Recitations \n\n"
-  for(i in meta$recitations) {
-    o <- paste0(
-      o,
-      glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
-    )
-  }
-  cat(paste0(o, "\n\n"))
-}
+session_time_loc("lectures")
+session_time_loc(
+  "recitations", 
+  note = "Note that, depending on class enrollment, we may not run all of these recitation sections."
+  )
 ```
 
 ## Teaching Team
@@ -63,12 +66,20 @@ if ("instructors" %in% names(staff)) {
   authors <- c()
   for(i in staff$instructors) {
     authors <- append(authors, i$name)
-    o <- paste0(
+    o <- stringr::str_c(
       o, 
-      glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email}, {i$office}\n\n")
+      glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email}, {i$office}  \n")
       )
+    if ("office_hours" %in% names(i)) {
+      for(h in i$office_hours) {
+        o <- stringr::str_c(
+          o, 
+          glue::glue("{h$day}, {h$time}, {h$room}\n\n")
+        )
+      }
+    }
   }
-  cat(paste0(o, "\n\n"))
+  cat(stringr::str_c(o, "\n\n"))
 }
 
 if ("phd_instructors" %in% names(staff)) {
@@ -82,14 +93,10 @@ if ("phd_instructors" %in% names(staff)) {
   cat(paste0(o, "\n\n"))
 }
 
-cat( glue::glue("---
+cat(glue::glue("---
 author: {authors}
 ---"))
 ```
-
-## Course Description
-
-Quantitative analyses are one of many 'ways of knowing', and one with particular
 
 ## Canvas Site
 
@@ -113,8 +120,9 @@ That said, we recognize that there may be a variety of reasons for you to miss a
 
 No! All readings are uploaded to the course Canvas site. In fact, many, if not all, of the texts are available digitally to MIT affiliates through the libraries, and those that will be made available to you on Canvas. Just remember this favor when you ask yourself how much of the reading to complete...
 
-We will be relying on the following primary texts for this course. The textbook is freely available.
+We will be relying on the following primary texts for this course.
 
+For those of you seeking more in-depth treatments of material we encounter too-briefly in the latter few weeks of the course, I recommend...
 
 ## Software
 
@@ -252,7 +260,7 @@ lecture <- function(start = start, lec, offset = 0, title = "Lorem Ipsum") {
                "))
 }
 
-schedule <- yaml::read_yaml(file = "schedule.yaml")
+schedule <- yaml::read_yaml("schedule.yaml", readLines.warn = FALSE)
 
 for (class in schedule) {
     lecture(start, lec = class$lec, title = class$title, offset = 0)
@@ -311,7 +319,6 @@ build_schedule <- function(schedule) {
   }
 }
 
-# test<- get_zotero("D82QEDI7")
 build_schedule(schedule)
 
 ```
