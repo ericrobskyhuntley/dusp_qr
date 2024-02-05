@@ -526,6 +526,8 @@ df_named |>
 
 That's a whole series of data processing steps, all collapsed into a very readable, line-by-line workflow. 
 
+One thing you might want to note is that the pipe we're using (`|>`) is different than the one that you'll sometimes see if you look up how to do something on, for example, Stack Exchange (or if you ask, for example, ChatGPT). Frequently, you'll see this pipe instead: `%>%`. This does the same thing, but comes from a `tidyverse` package. `|>` is built into R, with no libraries loaded (as of a fairly recent updated). So we're using what you'll see folks calling the 'base R pipe' instead of what you'll see folks callin the `dplyr` pipe.
+
 I know that this was a lot. But we've really covered the basics of R syntax at this point. We'll continue to expand on our knowledge over the course of the half-semester. For the curious: I include a last thing here that might make your code make more sense to you and others. It's optional, and I don't expect you to follow it, but it's something I've started doing as standard practice and you could too, if you'd like.
 
 ## Explicit Namespacing
