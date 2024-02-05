@@ -24,9 +24,25 @@ meta <- yaml::read_yaml(file = "meta.yaml")
 
 # Course Information
 
-> The late poet-warrior, Audre Lorde, warned that the master's tools will never dismantle the master's house. [...] The issue is not whether the master uses, or endorses the use of, some tool or another. Rather, who controls the conditions and the ends to which any tools are wielded? [...] If the master loses control of the means of production, he is no longer the master. [@gilmore_public_2022, 79]
+Quantitative analyses are one useful way to understand and analyze our worlds. Whether working for community-based organizations, community development corporations, public agencies, or private planning and design firms, planners use numbers (thus, quantitative) and use arguments and evidence (thus, 'reasoning'). The course is meant to get students to the point where they are capable of using quantitative and statistical arguments in planning, design, and policy-making contexts. Some planners summarize, analyze, and present data they have collected themselves or have obtained from secondary sources; others must review quantitative analyses conducted by others and assess the validity of their arguments. 
 
-Which is to say: welcome to quantitative reasoning and statistical methods for planners.
+This course is designed to prepare you to conduct basic statistical analysis of data yourself and to critically review analyses prepared by others. Specifically, using examples of quantitative analyses related to the planning profession, the course will familiarize you with a variety of tools for describing, understanding, and comparing sets of data, as well as those used to generate estimates and test hypotheses. The course emphasizes the development of sound arguments and research design, recognizing both the power and limits of quantitative analysis in argumentation. The course will also introduce students to the use of the `R` statistical computing language, which is one of the most widely used and powerful tools for developing quantitative and statistical analyses.
+
+## Learning Objectives
+
+By the end of the course, students should have developed:
+
+1. An understanding of foundational concepts in statistics, including:
+    a. Measures of central tendency and dispersion;
+    b. Principles of probability and sampling;
+    c. Approaches to testing differences in means and proportions;
+    d. Correlation; and
+    e. Bivariate regression and multiple regression, and (time permitting) logistic regression;
+2. Principles of research design;
+3. An ability to critically analyze quantitative research; and 
+4. Experience seeing how quantitative analysis fits into urban planning practice with a focus on racial justice, economic inequality, climate change, and democracy.
+
+A primary focus of the class is on developing your “reasoning” skills: clarifying research questions; stating and investigating hypotheses; wrestling with the complexities of identifying causes and effects; struggling with the challenges of simplifying complexity in ways that make knowledge shareable without doing violence to truth; and generally making, supporting, and critiquing arguments.
 
 ## Schedule
 
