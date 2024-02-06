@@ -60,7 +60,7 @@ session_details(
 
 ```{r echo=FALSE, results = "asis"}
 teaching_team_details(role = "Instructors")
-set_authors()
+set_authors(role = "Instructors")
 teaching_team_details(role = "PhD Instructors")
 ```
 

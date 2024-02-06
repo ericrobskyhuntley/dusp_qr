@@ -56,10 +56,9 @@ teaching_team_details <- function(role) {
   }
 }
 
-set_authors <- function(type = "Instructors") {
-  type_lower <- stringr::str_to_lower(type)
+set_authors <- function(role = "Instructors") {
   authors <- c()
-  for(i in META$staff[[type_lower]]) {
+  for(i in META$staff[[stringr::str_to_lower(role)]]) {
     authors <- append(authors, i$name)
   }
   cat(glue::glue("---
