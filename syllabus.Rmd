@@ -19,7 +19,7 @@ output:
 
 ```{r setup, include=FALSE}
 source('R/helpers.R')
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
 ```
 
 # Course Information
@@ -46,7 +46,7 @@ A primary focus of the class is on developing your “reasoning” skills: clari
 
 ## Class Sessions
 
-```{r echo=FALSE, results = "asis"}
+```{r}
 session_details(
   type = "Lectures"
   )
@@ -58,7 +58,7 @@ session_details(
 
 ## Teaching Team
 
-```{r echo=FALSE, results = "asis"}
+```{r}
 teaching_team_details(role = "Instructors")
 set_authors(role = "Instructors")
 teaching_team_details(role = "PhD Instructors")
@@ -76,7 +76,7 @@ No! All readings are uploaded to the course Canvas site. In fact, many, if not a
 
 We will be relying on two primary texts for this course, supplemented by articles and other readings...
 
-```{r echo=FALSE, results='asis'}
+```{r}
 get_zotero(META$textbooks)
 ```
 
@@ -166,6 +166,6 @@ We have two points here:
 
 # Schedule
 
-```{r echo=FALSE, results="asis"}
+```{r}
 build_schedule(yaml::read_yaml("schedule.yaml", readLines.warn = FALSE))
 ```
