@@ -44,16 +44,17 @@ By the end of the course, students should have developed:
 
 A primary focus of the class is on developing your “reasoning” skills: clarifying research questions; stating and investigating hypotheses; wrestling with the complexities of identifying causes and effects; struggling with the challenges of simplifying complexity in ways that make knowledge shareable without doing violence to truth; and generally making, supporting, and critiquing arguments.
 
-## Schedule
+## Class Sessions
 
 ```{r echo=FALSE, results = "asis"}
 session_time_loc <- function(name, note = "") {
-  if (name %in% names(meta)) {
-    o <- glue::glue("### {stringr::str_to_title(name)} \n\n")
+  name_lower <- stringr::str_to_lower(name)
+  if (name_lower %in% names(meta)) {
+    o <- glue::glue("### {name} \n\n")
     if (length(note) > 0) {
       o <- stringr::str_c(o, note, "\n\n")
     }
-    for(i in meta[[name]]) {
+    for(i in meta[[name_lower]]) {
       if (!("room" %in% names(i))) {
         i$room <- "Room TBD"
       }
@@ -66,9 +67,9 @@ session_time_loc <- function(name, note = "") {
   }
 }
 
-session_time_loc("lectures")
+session_time_loc("Lectures")
 session_time_loc(
-  "recitations", 
+  "Recitations", 
   note = "Note that, depending on class enrollment, we may not run all of these recitation sections."
   )
 ```
@@ -76,59 +77,65 @@ session_time_loc(
 ## Teaching Team
 
 ```{r echo=FALSE, results = "asis"}
+
 staff <- meta$staff
-if ("instructors" %in% names(staff)) {
-  o <- "### Instructors\n\n"
+set_authors <- function(name = "Instructors") {
+  name_lower <- stringr::str_to_lower(name)
   authors <- c()
-  for(i in staff$instructors) {
+  for(i in staff[[name_lower]]) {
     authors <- append(authors, i$name)
-    o <- stringr::str_c(
-      o, 
-      glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email}, {i$office}  \n")
+  }
+  cat(glue::glue("---
+  author: {authors}
+  ---"))
+}
+
+teaching_team_members <- function(name) {
+  name_lower <- stringr::str_to_lower(
+    stringr::str_replace_all(
+      name,
+      c(" " = "_")
+    )
+  )
+  if (name_lower %in% names(staff)) {
+    o <- glue::glue("### {name} \n\n")
+    for(i in staff[[name_lower]]) {
+      o <- stringr::str_c(
+        o,
+        glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email} \ \n\n")
       )
-    if ("office_hours" %in% names(i)) {
-      for(h in i$office_hours) {
-        o <- stringr::str_c(
-          o, 
-          glue::glue("{h$day}, {h$time}, {h$room}\n\n")
-        )
+      if ("office_hours" %in% names(i)) {
+        o <- o |>
+          stringr::str_c(
+            glue::glue("*Office Hours: ")
+          )
+        for(h in i$office_hours) {
+          o <- o |> stringr::str_c(
+            glue::glue("{h$day}, {h$time} ({h$room}) ")
+          )
+        }
+        o <- o |>
+          stringr::str_c(
+            glue::glue("*\n\n")
+          )
       }
     }
+    cat(stringr::str_c(o, "\n\n"))
   }
-  cat(stringr::str_c(o, "\n\n"))
 }
 
-if ("phd_instructors" %in% names(staff)) {
-  o <- "### PhD Instructors \n\n"
-  for(i in staff$phd_instructors) {
-    o <- paste0(
-      o,
-      glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email}\n\n")
-    )
-  }
-  cat(paste0(o, "\n\n"))
-}
+teaching_team_members("Instructors")
 
-cat(glue::glue("---
-author: {authors}
----"))
+teaching_team_members("PhD Instructors")
+
+
 ```
+
+
 
 ## Canvas Site
 
 The Canvas site for the class can be found at `r meta$canvas`. Please consult that page for all assignments and readings that are not otherwise available to you.
-
-## Late Work
-
-Turning in assignments promptly is important both for keeping current with the subject matter, which is cumulative, and to keep all students on a relatively level playing field. A late assignment will be accepted for a loss of one letter grade (e.g., an A becomes a B).
-
-There will of course be situations where we are willing to bend these rules. These are regulatory ideals, not absolutes. We are human beings; you are human beings. Life happens. We will strive to respect you by taking your requests seriously if you similarly strive to not take advantage of our inclination to respect them. We’re all in this weird boat together---let’s be good to each other.
-
-## Attendance
-
-Attendance is worth 20% of your grade in this course. As in life, much of your success in this class depends on showing up. We will be taking attendance in lectures and recitations. (Students are required to go to one recitation per week.)
-
-That said, we recognize that there may be a variety of reasons for you to miss a lecture or lab session. Please let us 
 
 # Materials
 
@@ -149,6 +156,46 @@ For some of you, this may be your first time doing any computer programming at a
 For others, you may have programming experience but less statistical background---that's great! `R` is a full-featured programming language that can do everything your primary languages can do (Python, JavaScript, FORTRAN, whatever). Like all languages, it has its own idioms and quirks, but our hope is that you'll learn to love it. We certainly have.^[So much so that this syllabus was built using R!]
 
 In recent years, `R` programming has changed substantially with the introduction of new packages for preparing, slicing, dicing and visualizing data. Much of this travels under the banner of the so-called `tidyverse`; we'll be making extensive use of the `tidyverse` to simplify our lives and make our code more readable to ourselves and others.
+
+# Evaluation
+
+## Attendance (20%)
+
+As in life, much of your success in this class depends on showing up. We will be taking attendance in lectures and labs. (Students are required to go to one lab per week). That said, we recognize that there may be a variety of reasons for you to miss a lecture or lab session. We will be streaming and recording lectures for those who occasionally cannot come to class due to illness or another excused absence. Watching a class recording will only count as a positive attendance for that class if you have communicated with us about it. 
+
+Class recordings will only be shared to students and teaching staff in this class and will be deleted once the semester is over. For any students who do not wish to appear in the class recordings, please come talk with us and we can help you find a seat outside of the view of the video.
+
+## Weekly Exercises (60%)
+
+There are 4 homework assignments, one each week for the first four weeks. Most of the assignments will have a conceptual short essay question and a calculation question to help us gauge the class’s comprehension of key concepts, followed by a number of questions giving you the opportunity to put these concepts into practice through the use of R. Homework assignments will be due on Canvas on Thursdays by 11:59PM. 
+
+## Final Project (20%)
+
+We don't have very much time in this class! As such, 
+
+# Course Policies
+
+## Late Work
+
+Turning in assignments promptly is important both for keeping current with the subject matter, which is cumulative, and to keep all students on a relatively level playing field. A late assignment will be accepted for a loss of one letter grade (e.g., an A becomes a B).
+
+There will of course be situations where we are willing to bend these rules. These are regulatory ideals, not absolutes. We are human beings; you are human beings. Life happens. We will strive to respect you by taking your requests seriously if you similarly strive to not take advantage of our inclination to respect them. We’re all in this weird boat together---let’s be good to each other.
+
+## Generative AI (e.g., ChatGPT)
+
+Generative AI, large language models... most of you will have heard of these by now, most of you will probably have used them by now. From an instructional standpoint, it is generally extremely difficult to detect when a student has used, for example, ChatGPT. 
+
+The facts are these: one of the things it is very good at is writing code, provided that you know how to ask the right questions. This is because the sites that programmers haunt to provide assistance to each other ([Stack Overflow](https://stackoverflow.com/) being the best-known) are among those used to train the language models, a fact which is starting to [play out in legal disputes](https://www.wired.com/story/stack-overflow-will-charge-ai-giants-for-training-data/). The point is: these things can write code for you and the teaching team will not, realistically, be able to detect it.
+
+So. We will not go so far as to issue a prohibition on the use of such software. __However:__ we ask that you try your very hardest before resorting to the use of e.g., ChatGPT. Much of learning how to program is learning how to be work through the difficult patches, where `R` keeps throwing a slightly mystifying error and you have to diagnose the problem. We'd suggest that your sequence look something like this:
+
+1. Try your hardest to write the code yourself.
+2. Ask one of your colleagues what your issue might be, so that they can experience the learning benefits of explaining something to someone else.
+3. Ask a member of the teaching team.
+4. Failing all else, ask ChatGPT.
+
+```{r, child='mit_required.md'}
+```
 
 # Getting Help
 
@@ -172,24 +219,7 @@ Using `RStudio` makes getting help with `R`-specific problems quite simple! Say 
 
 ```
 
-
 This will yield a screen listing the arguments you can pass to a given function and some examples of how it's used. This should usually be your first step in diagnosing a programming problem!
-
-## So What About ChatGPT?
-
-Generative AI, large language models... most of you will have heard of these by now, most of you will probably have used them by now. From an instructional standpoint, it is generally extremely difficult to detect when a student has used, for example, ChatGPT. 
-
-The facts are these: one of the things it is very good at is writing code, provided that you know how to ask the right questions. This is because the sites that programmers haunt to provide assistance to each other ([Stack Overflow](https://stackoverflow.com/) being the best-known) are among those used to train the language models, a fact which is starting to [play out in legal disputes](https://www.wired.com/story/stack-overflow-will-charge-ai-giants-for-training-data/). The point is: these things can write code for you and the teaching team will not, realistically, be able to detect it.
-
-So. We will not go so far as to issue a prohibition on the use of such software. __However:__ we ask that you try your very hardest before resorting to the use of e.g., ChatGPT. Much of learning how to program is learning how to be work through the difficult patches, where `R` keeps throwing a slightly mystifying error and you have to diagnose the problem. We'd suggest that your sequence look something like this:
-
-1. Try your hardest to write the code yourself.
-2. Ask one of your colleagues what your issue might be, so that they can experience the learning benefits of explaining something to someone else.
-3. Ask a member of the teaching team.
-4. Failing all else, ask ChatGPT.
-
-```{r, child='mit_required.md'}
-```
 
 ## On Mental Health...
 
@@ -199,7 +229,6 @@ We have two points here:
 
 1. MIT offers a range of counseling and mental health resources for students. We would really encourage you to be proactive about taking advantage of them; and 
 2. Do not hesitate to let us know if you’re struggling. It is not our intention to mine for the details of your private lives! It is only to let you know that we are sensitive to the distinctive difficulties of the environment we inhabit and that help is available.
-
 
 # Schedule
 
