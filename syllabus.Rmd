@@ -49,7 +49,7 @@ A primary focus of the class is on developing your “reasoning” skills: clari
 
 ## How Will We Be Learning?
 
-This is a quantitative class in which our methods will be empirical and statistical; our tools will be computational. As such, much of our time will be spent in the weeds, learning how to build models that take space into account, and ask spatial questions, statistically. However: my hope is that no one will be intimidated because they’re not Data Scientists™. To the extent that it is possible, I will be seeking to make these methods approachable and accessible.
+This is a quantitative class in which our methods will be empirical and statistical; our tools will be computational. As such, much of our time will be spent in the weeds, learning how to ask questions, statistically. However: my hope is that no one will be intimidated because they’re not Data Scientists™. To the extent that it is possible, I will be seeking to make these methods approachable and accessible.
 
 ## Class Sessions
 
@@ -74,7 +74,7 @@ teaching_team_details(role = "PhD Instructors")
 
 ## Class Calendar
 
-A complete class calendar, including recitations and office hours, is [available here](META$calendar_url).
+A complete class calendar, including recitations and office hours, is `r paste0("[available here](", META$calendar_url , ")")`.
 
 ## Canvas Site
 
@@ -113,11 +113,15 @@ Class recordings will only be shared to students and teaching staff in this clas
 
 ## Weekly Exercises (60%)
 
-There are 4 homework assignments, one each week for the first four weeks. Most of the assignments will have a conceptual short essay question and a calculation question to help us gauge the class’s comprehension of key concepts, followed by a number of questions giving you the opportunity to put these concepts into practice through the use of R. Homework assignments will be due on Canvas on Thursdays by 11:59PM. 
+There are 4 homework assignments, one each week for the first four weeks. Most of the assignments will have a conceptual short essay question and a calculation question to help us gauge the class’s comprehension of key concepts, followed by a number of questions giving you the opportunity to put these concepts into practice through the use of R. 
+
+**Homework assignments will be due on Canvas on Thursdays by 11:59PM.**
 
 ## Final Project (20%)
 
 We don't have very much time in this class! As such, the final project will be spread over the final two weeks of class, in which you will submit a sequence of exercises that are intended to permit you to apply the methods we cover in this class to a subject of your interest with a partner. By structuring the final project through a series of two exercises, we hope to both streamline the process and offer the benefits of carrying out an exploratory project aligned with your course of study and career goals.
+
+**All final project material will be due on Canvas by Friday, March 22 at 11:59PM.**
 
 # Course Policies
 
