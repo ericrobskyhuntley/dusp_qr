@@ -1,53 +1,52 @@
 ---
 - lec: 1
   title: 'Introduction: Why Are We Here?'
-  topics: ['course overview', 'episemological foundations', 'sampling and data']
-  readings: "4BXGD2BU"
+  topics: ['course overview']
 - lec: 2
-  title: 'Population Distributions'
-  topics: ['course overview', 'episemological foundations']
+  title: 'Descriptive Statistics & Population Distributions'
+  topics: ['data types', 'samples', 'distributions', 'cross tabulations']
   readings: "FPWIZMC2"
 - lec: 3
   title: 'Centrality & Dispersion'
-  topics: ['course overview', 'episemological foundations']
+  topics: ['centrality measures (mean, median, mode)', 'dispersion measures (variance, standard deviation', 'z-scores']
   readings: "S7WZVRLK"
 - lec: 4
   title: 'Sampling & Probability'
-  topics: ['course overview', 'episemological foundations']
+  topics: ['probability', 'contingency tables']
   readings: "TUZTYU3I"
 - lec: 5
   title: 'Random Variables'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  topics: ['expected values', 'discrete probability distributions', 'continuous probability distributions']
+  readings: "5CM4DMFL"
 - lec: 6
-  title: 'The Normal Distribution'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  title: 'The Normal (Gaussian) Distribution'
+  topics: ['normal distribution', 'history of statistics']
+  readings: "5IKI3Q82"
 - lec: 7
-  title: 'Central Limit Theorem'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
-- lec: 8
   title: 'Confidence Intervals'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  topics: ['population means', 'confidence intervals']
+  readings: "5ZEMTIM3"
+- lec: 8
+  title: 'Hypothesis Testing (One Sample)'
+  topics: ['null/alternative hypothesis', 'type I/II errors', 't-tests']
+  readings: "UKWJBCJU"
 - lec: 9
-  title: 'Hypothesis Testing'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  title: 'Hypothesis Testing (Two Samples)'
+  topics: ['hypothesis testing for two population means', 'matched/paired samples']
+  readings: "32U8FRIS"
 - lec: 10
-  title: 'Chi-Squared Tests'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  title: 'Chi-Squared Distribution and Tests'
+  topics: ['chi-square distributions', 'chi-square tests', 'goodness of fit', 'tests of independence']
+  readings: "8KYB3LDX"
 - lec: 11
   title: 'Bivariate Linear Regression'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  topics: ['correlation', 'scatter plots', 'linear equations']
+  readings: "MMSSVGJT"
 - lec: 12
-  title: 'Multi-Variate Regression'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  title: 'Multivariate Regression'
+  topics: ['interpreting coefficients', 'collinearity', 'model fit']
+  readings: "JBXXWU5R"
 - lec: 13
-  title: 'Logistic Regression'
-  topics: ['course overview', 'episemological foundations']
-  readings: "TUZTYU3I"
+  title: 'Logistic Regression (If Time)'
+  topics: ['probit and logit models', 'odds ratios']
+  readings: "7QIPTV7P"

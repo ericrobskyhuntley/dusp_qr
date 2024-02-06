@@ -15,7 +15,17 @@ session_details <- function(type, note = "") {
       }
       o <- stringr::str_c(
         o,
-        glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
+        glue::glue("+ {i$day}, {i$time}, {i$room}")
+      )
+      if("instructor" %in% names(i)) {
+        o <- stringr::str_c(
+          o,
+          glue::glue(", {i$instructor}")
+        )
+      }
+      o <- stringr::str_c(
+        o,
+        "\n"
       )
     }
     cat(stringr::str_c(o, "\n\n"))
@@ -71,27 +81,71 @@ get_zotero <- function(library, user = META$zotuser) {
   tmp_bib <- tempfile()
   url <- glue::glue("https://api.zotero.org/users/{user}/collections/{library}/items/top")
   httr::GET(
-    url,
-    query = list(
-      format="biblatex",
-      v="3"
-    )
-  ) |>
+      url,
+      query = list(
+        format="biblatex",
+        v="3"
+      )
+    ) |>
     httr::content("text", encoding="UTF-8") |>
     cat(file = tmp_bib)
   
   bib <- RefManageR::ReadBib(tmp_bib, check = FALSE)
   file.remove(tmp_bib)
   
-  invisible(RefManageR::NoCite(bib, as.character(names(bib))))
+  opt <- c()
+  for (i in bib) {
+    if ("note" %in% names(i)) {
+      if ("optional" %in% i$note) {
+        opt <- append(opt, TRUE)
+      } else {
+        opt <- append(opt, FALSE)
+      }
+    } else {
+      opt <- append(opt, FALSE)
+    }
+  }
   
-  RefManageR::PrintBibliography(
-    bib, 
-    .opts = list(
-      dashed = TRUE,
-      first.inits = FALSE
+  opt_bib <- base::suppressMessages(bib[opt,])
+  bib <- base::suppressMessages(bib[!opt,])
+  
+  
+  if (length(bib) > 0) {
+    invisible(RefManageR::NoCite(bib, as.character(names(bib))))
+    cat(
+      "*Required Readings* \n\n"
     )
-  )
+    RefManageR::PrintBibliography(
+      bib, 
+      .opts = list(
+        dashed = TRUE,
+        first.inits = FALSE
+      )
+    )
+    cat(
+      "\n\n"
+    )
+  }
+  if (length(opt_bib) > 0) {
+    for (i in 1:length(opt_bib)) {
+      opt_bib[[i]]$note <- NULL
+    }
+    invisible(RefManageR::NoCite(opt_bib, as.character(names(opt_bib))))
+    cat(
+      "*Optional Readings* \n\n"
+    )
+    RefManageR::PrintBibliography(
+      opt_bib, 
+      .opts = list(
+        dashed = TRUE,
+        first.inits = FALSE
+      )
+    )
+    cat(
+      "\n\n"
+    )
+    
+  }
 }
 
 format_date <- function(date) {
@@ -129,10 +183,10 @@ dow_convert <- function(dow) {
   }
 }
 
-misses <- 0
+MISSES <- 0
 
-lecture <- function(start = META$first_class, lec, offset = 0, title = "Lorem Ipsum") {
-  lec_miss <- lec + misses
+lecture_details <- function(start = META$first_class, class, offset = 0) {
+  lec_miss <- class$lec + MISSES
   lec_per_week <- length(META$lectures)
   week <- ceiling(lec_miss / lec_per_week)
   lec_in_week <- lec_miss - ((week - 1) * lec_per_week)
@@ -154,21 +208,46 @@ lecture <- function(start = META$first_class, lec, offset = 0, title = "Lorem Ip
     )
   }
   
+  if(date %in% miss_days) {
+    MISSES <<- MISSES + 1
+    lec_miss <- class$lec + MISSES
+    lec_per_week <- length(META$lectures)
+    week <- ceiling(lec_miss / lec_per_week)
+    lec_in_week <- lec_miss - ((week - 1) * lec_per_week)
+    day <- dow_convert(META$lectures[[lec_in_week]]$day)
+    
+    miss_days <- as.Date(META$miss_days)
+    
+    if(day == lubridate::wday(start, week_start = 1) + offset) {
+      date <- lubridate::floor_date(
+        start + offset + 7 * (week - 1),
+        "week",
+        week_start = day
+      )
+    } else {
+      date <- lubridate::ceiling_date(
+        start + offset + 7 * (week - 1),
+        "week",
+        week_start = day
+      )
+    }
+  }
+  
   lec_day_text <- lubridate::wday(date, label = TRUE, abbr = FALSE)
   
-  if (date %in% miss_days) {
-    misses <<- misses + 1
-  }
-  cat(glue::glue("## Lecture {lec}: {lec_day_text} {format_date(date)}\n\n
+  topics <- stringr::str_c(stringr::str_c('`', class$topics, '`'), collapse = ',')
+  cat(glue::glue("## Lecture {class$lec}: {lec_day_text} {format_date(date)}\n\n
 
-               ### {title}\n\n
+               ### {class$title}\n\n
+               
+               *Topics: {topics}*\n\n
 
                "))
 }
 
 build_schedule <- function(schedule) {
   for (class in schedule) {
-    lecture(META$first_class, lec = class$lec, title = class$title, offset = 0)
+    lecture_details(META$first_class, class = class, offset = 0)
     if ("readings" %in% names(class)) {
       get_zotero(class$readings)
       cat("\n\n")

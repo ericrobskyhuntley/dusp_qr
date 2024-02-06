@@ -18,8 +18,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  results = 'asis'
+  )
 source('R/helpers.R')
-knitr::opts_chunk$set(echo = FALSE, results = 'asis')
 ```
 
 # Course Information
@@ -44,6 +47,10 @@ By the end of the course, students should have developed:
 
 A primary focus of the class is on developing your “reasoning” skills: clarifying research questions; stating and investigating hypotheses; wrestling with the complexities of identifying causes and effects; struggling with the challenges of simplifying complexity in ways that make knowledge shareable without doing violence to truth; and generally making, supporting, and critiquing arguments.
 
+## How Will We Be Learning?
+
+This is a quantitative class in which our methods will be empirical and statistical; our tools will be computational. As such, much of our time will be spent in the weeds, learning how to build models that take space into account, and ask spatial questions, statistically. However: my hope is that no one will be intimidated because they’re not Data Scientists™. To the extent that it is possible, I will be seeking to make these methods approachable and accessible.
+
 ## Class Sessions
 
 ```{r}
@@ -56,6 +63,7 @@ session_details(
   )
 ```
 
+
 ## Teaching Team
 
 ```{r}
@@ -63,6 +71,10 @@ teaching_team_details(role = "Instructors")
 set_authors(role = "Instructors")
 teaching_team_details(role = "PhD Instructors")
 ```
+
+## Class Calendar
+
+A complete class calendar, including recitations and office hours, is [available here](META$calendar_url).
 
 ## Canvas Site
 
@@ -105,7 +117,7 @@ There are 4 homework assignments, one each week for the first four weeks. Most o
 
 ## Final Project (20%)
 
-We don't have very much time in this class! As such, 
+We don't have very much time in this class! As such, the final project will be spread over the final two weeks of class, in which you will submit a sequence of exercises that are intended to permit you to apply the methods we cover in this class to a subject of your interest with a partner. By structuring the final project through a series of two exercises, we hope to both streamline the process and offer the benefits of carrying out an exploratory project aligned with your course of study and career goals.
 
 # Course Policies
 
@@ -150,7 +162,6 @@ Using `RStudio` makes getting help with `R`-specific problems quite simple! Say 
 ?filter
 # If you want to be more explicit...
 ?dplyr::filter
-
 ```
 
 This will yield a screen listing the arguments you can pass to a given function and some examples of how it's used. This should usually be your first step in diagnosing a programming problem!
