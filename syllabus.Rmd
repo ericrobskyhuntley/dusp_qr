@@ -7,8 +7,8 @@ thanks: "This syllabus was built atop, benefitted immensely from, and owes a gre
 numbersections: true
 secnumdepth: 2
 colorlinks: true
-toc: false
-toc-depth: 2
+toc: true
+toc-depth: 1
 linkcolor: red
 citecolor: red
 urlcolor: red
@@ -18,8 +18,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+source('R/helpers.R')
 knitr::opts_chunk$set(echo = TRUE)
-meta <- yaml::read_yaml(file = "meta.yaml")
 ```
 
 # Course Information
@@ -47,29 +47,11 @@ A primary focus of the class is on developing your “reasoning” skills: clari
 ## Class Sessions
 
 ```{r echo=FALSE, results = "asis"}
-session_time_loc <- function(name, note = "") {
-  name_lower <- stringr::str_to_lower(name)
-  if (name_lower %in% names(meta)) {
-    o <- glue::glue("### {name} \n\n")
-    if (length(note) > 0) {
-      o <- stringr::str_c(o, note, "\n\n")
-    }
-    for(i in meta[[name_lower]]) {
-      if (!("room" %in% names(i))) {
-        i$room <- "Room TBD"
-      }
-      o <- stringr::str_c(
-        o,
-        glue::glue("+ {i$day}, {i$time}, {i$room}\n\n")
-      )
-    }
-    cat(stringr::str_c(o, "\n\n"))
-  }
-}
-
-session_time_loc("Lectures")
-session_time_loc(
-  "Recitations", 
+session_details(
+  type = "Lectures"
+  )
+session_details(
+  type = "Recitations",
   note = "Note that, depending on class enrollment, we may not run all of these recitation sections."
   )
 ```
@@ -77,65 +59,14 @@ session_time_loc(
 ## Teaching Team
 
 ```{r echo=FALSE, results = "asis"}
-
-staff <- meta$staff
-set_authors <- function(name = "Instructors") {
-  name_lower <- stringr::str_to_lower(name)
-  authors <- c()
-  for(i in staff[[name_lower]]) {
-    authors <- append(authors, i$name)
-  }
-  cat(glue::glue("---
-  author: {authors}
-  ---"))
-}
-
-teaching_team_members <- function(name) {
-  name_lower <- stringr::str_to_lower(
-    stringr::str_replace_all(
-      name,
-      c(" " = "_")
-    )
-  )
-  if (name_lower %in% names(staff)) {
-    o <- glue::glue("### {name} \n\n")
-    for(i in staff[[name_lower]]) {
-      o <- stringr::str_c(
-        o,
-        glue::glue("+ {i$name} ({i$pronouns}), {i$title}, {i$email} \ \n\n")
-      )
-      if ("office_hours" %in% names(i)) {
-        o <- o |>
-          stringr::str_c(
-            glue::glue("*Office Hours: ")
-          )
-        for(h in i$office_hours) {
-          o <- o |> stringr::str_c(
-            glue::glue("{h$day}, {h$time} ({h$room}) ")
-          )
-        }
-        o <- o |>
-          stringr::str_c(
-            glue::glue("*\n\n")
-          )
-      }
-    }
-    cat(stringr::str_c(o, "\n\n"))
-  }
-}
-
-teaching_team_members("Instructors")
-
-teaching_team_members("PhD Instructors")
-
-
+teaching_team_details(role = "Instructors")
+set_authors()
+teaching_team_details(role = "PhD Instructors")
 ```
-
-
 
 ## Canvas Site
 
-The Canvas site for the class can be found at `r meta$canvas`. Please consult that page for all assignments and readings that are not otherwise available to you.
+The Canvas site for the class can be found at `r META$canvas`. Please consult that page for all assignments and readings that are not otherwise available to you.
 
 # Materials
 
@@ -143,9 +74,12 @@ The Canvas site for the class can be found at `r meta$canvas`. Please consult th
 
 No! All readings are uploaded to the course Canvas site. In fact, many, if not all, of the texts are available digitally to MIT affiliates through the libraries, and those that will be made available to you on Canvas. Just remember this favor when you ask yourself how much of the reading to complete...
 
-We will be relying on the following primary texts for this course.
+We will be relying on two primary texts for this course, supplemented by articles and other readings...
 
-For those of you seeking more in-depth treatments of material we encounter too-briefly in the latter few weeks of the course, I recommend...
+```{r echo=FALSE, results='asis'}
+get_zotero(META$textbooks)
+```
+
 
 ## Software
 
@@ -201,7 +135,7 @@ So. We will not go so far as to issue a prohibition on the use of such software.
 
 ## Email
 
-We will not always be able to respond to email right away. If we have not answered an email by the next time we see you in class, feel free to remind us. We will do our best to respond to your emails in 24 hours during the week. Instructors do not respond to emails on the weekends. The labor movement fought long and hard to secure your weekend! It is truly remarkable that we live in a world in which an email can travel to space and divebomb from the exosphere to our pockets in a matter of seconds; this does not imply that our response must be equally instantaneous! 
+We will not always be able to respond to email right away. If we have not answered an email by the next time we see you in class, feel free to remind us. We will do our best to respond to your emails within 24 hours during the week. Instructors do not respond to emails on the weekends. The labor movement fought long and hard to secure your weekend! It is truly remarkable that we live in a world in which an email can travel to space and divebomb from the exosphere to our pockets in a matter of seconds; this does not imply that our response must be equally instantaneous! 
 
 ## Office Hours
 
@@ -233,139 +167,5 @@ We have two points here:
 # Schedule
 
 ```{r echo=FALSE, results="asis"}
-start <- as.Date(meta$first_class)
-
-format_date <- function(date) {
-  format(
-    date,
-    format = "%m/%d"
-  )
-}
-
-week_desc <- function(start, week) {
-  mon <- format_date(
-    lubridate::floor_date(start, "week", 1)
-  )
-  fri <- format_date(
-    lubridate::ceiling_date(start, "week", week_start = 5)
-  )
-  paste("Week ", week, sep='', ", " , mon, "--", fri)
-}
-
-dow_convert <- function(dow) {
-  if (dow=="Monday") {
-    1
-  } else if (dow=="Tuesday") {
-    2
-  } else if (dow=="Wednesday") {
-    3
-  } else if (dow=="Thursday") {
-    4
-  } else if (dow=="Friday") {
-    5
-  } else if (dow=="Saturday") {
-    6
-  } else if (dow=="Sunday") {
-    7
-  }
-}
-
-misses <- 0
-
-lecture <- function(start = start, lec, offset = 0, title = "Lorem Ipsum") {
-  lec_miss <- lec + misses
-  lec_per_week <- length(meta$lectures)
-  week <- ceiling(lec_miss / lec_per_week)
-  lec_in_week <- lec_miss - ((week - 1) * lec_per_week)
-  day <- dow_convert(meta$lectures[[lec_in_week]]$day)
-  
-  miss_days <- as.Date(meta$miss_days)
-  
-  if(day == lubridate::wday(start, week_start = 1) + offset) {
-    date <- lubridate::floor_date(
-      start + offset + 7 * (week - 1),
-      "week",
-      week_start = day
-      )
-  } else {
-    date <- lubridate::ceiling_date(
-      start + offset + 7 * (week - 1),
-      "week",
-      week_start = day
-      )
-  }
-  
-  lec_day_text <- lubridate::wday(date, label = TRUE, abbr = FALSE)
-  
-  if (date %in% miss_days) {
-    misses <<- misses + 1
-  }
-  cat(glue::glue("## Lecture {lec}: {lec_day_text} {format_date(date)}\n\n
-
-               ### {title}\n\n
-
-               "))
-}
-
-schedule <- yaml::read_yaml("schedule.yaml", readLines.warn = FALSE)
-
-for (class in schedule) {
-    lecture(start, lec = class$lec, title = class$title, offset = 0)
-    # if ("readings" %in% names(class)) {
-    #   get_zotero(class$readings)
-    #   cat("\n\n")
-    # }
-  }
-
-cite <- function(key, bib) {
-  # create a silent reference so RefManageR
-  # knows we've used this entry
-  RefManageR::NoCite(bib, key)
-  # create the string we need in the Markdown document
-  # paste0("[^", key, "]")
-}
-
-get_zotero <- function(library, user = meta$zotuser) {
-  tmp_bib <- tempfile()
-  url <- glue::glue("https://api.zotero.org/users/{user}/collections/{library}/items/top")
-  result <- httr::GET(
-      url,
-      query = list(
-        format="biblatex",
-        v="3"
-        )
-    ) |>
-    httr::content("text", encoding="UTF-8") |>
-    cat(file = tmp_bib)
-  
-  bib <- RefManageR::ReadBib(tmp_bib, check = FALSE)
-  
-  for (c in names(bib)) {
-    cite(c, bib)
-  }
-  
-  file.remove(tmp_bib)
-  
-  RefManageR::PrintBibliography(
-    bib, 
-    .opts = list(
-      # bib.style = "authoryear",
-      dashed = TRUE,
-      first.inits = FALSE
-      )
-    )
-}
-
-build_schedule <- function(schedule) {
-  for (class in schedule) {
-    lecture(start, lec = class$lec, title = class$title, offset = 0)
-    # if ("readings" %in% names(class)) {
-    #   get_zotero(class$readings)
-    #   cat("\n\n")
-    # }
-  }
-}
-
-build_schedule(schedule)
-
+build_schedule(yaml::read_yaml("schedule.yaml", readLines.warn = FALSE))
 ```

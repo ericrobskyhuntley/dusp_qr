@@ -4,3 +4,5 @@
 .Ruserdata
 renv/
 *.pdf
+*_cache/
+.DS_Store
