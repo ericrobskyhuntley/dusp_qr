@@ -314,7 +314,7 @@ own_units <- c(98186, 16605, 11783)
 
 We can then use the `data.frame()` function to construct a dataframe. We pass the four above vectors to the dataframe. We can do this one of two ways: we could store the municipality names as just another column of data _or_ use them as the row names.
 
-```{r echo = FALSE}
+```{r}
 df_unnamed <- data.frame(
   names,
   occ_units,
@@ -349,13 +349,13 @@ Now view these dataframes by either entering `View({Data Frame Name})` in the co
 
 When we provided names, it gave each row a name and does not think of that value as a variable; when we did not, the municipality is just another column. Let's examine the implications here. Let's try to select Cambridge, first in the `df_named` dataframe.
 
-```{r echo = FALSE}
+```{r}
 df_named["Cambridge",]
 ```
 
 Nice! We could also select more than one municipality, like so...
 
-```{r echo = FALSE}
+```{r}
 df_named[c("Cambridge", "Somerville"),]
 ```
 
@@ -363,7 +363,7 @@ The bracket syntax (`[rows, cols]`) is how `R` selects rows and columns. When on
 
 Let's try to select Cambridge on the unnamed dataframe.
 
-```{r echo = FALSE}
+```{r}
 df_unnamed["Cambridge",]
 ```
 
