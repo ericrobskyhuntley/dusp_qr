@@ -1,4 +1,5 @@
 ---
+thanks: "This syllabus was built atop, benefitted immensely from, and owes a great debt of gratitude to the prior efforts of Justin Steil, Ezra Haber Glenn, and Mariana Arcaya."
 canvas: https://canvas.mit.edu/courses/24163
 lectures:
   - day: Tuesday
@@ -28,6 +29,7 @@ staff:
   instructors:
   - name: Eric Robsky Huntley, PhD
     title: Lecturer in Urban Science and Planning
+    affiliation: "Department of Urban Studies and Planning, Massachusetts Institute of Technology, Cambridge, MA, USA"
     pronouns: they/them
     email: ehuntley@mit.edu
     office: 9-545
@@ -71,3 +73,4 @@ first_class: "2024-02-06"
 miss_days: ["2024-02-20"]
 textbooks: "SEU92Q74"
 calendar_url: "https://outlook.office365.com/owa/calendar/2e9d35e58a424f869ed280da9f921977@mit.edu/d02d3f76ec524e70b7f00ca588bb009a12070189817712880488/calendar.html"
+repo_url: "https://github.com/ericrobskyhuntley/dusp_qr/"
