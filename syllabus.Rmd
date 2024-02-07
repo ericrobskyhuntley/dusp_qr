@@ -3,7 +3,6 @@ course_num: "11.S938"
 title: "Quantitative Reasoning and Statistical Methods for Planners"
 subtitle: "Syllabus"
 date: "Spring 2024"
-thanks: "This syllabus was built atop, benefitted immensely from, and owes a great debt of gratitude to the prior efforts of Justin Steil, Ezra Haber Glenn, and Mariana Arcaya."
 numbersections: true
 secnumdepth: 2
 colorlinks: true
@@ -23,6 +22,10 @@ knitr::opts_chunk$set(
   results = 'asis'
   )
 source('R/helpers.R')
+```
+
+```{r results='asis'}
+set_thanks()
 ```
 
 # Course Information
@@ -95,7 +98,7 @@ get_zotero(META$textbooks)
 
 ## Software
 
-In this course, we will be using entirely free and open source software (this is frequently abbreviated FOSS---for those of you who have taken GIS, QGIS is also FOSS). Primarily, we will be using the `R` statistical computing environment and the RStudio integrated development environment (frequently abbreviated IDE). What this means is that you'll be __writing code__. 
+In this course, we will be using entirely free and open source software (this is frequently abbreviated FOSS---for those of you who have taken GIS, QGIS is also FOSS). Primarily, we will be using the `R` statistical computing environment and the RStudio integrated development environment (frequently abbreviated IDE). What this means is that you'll be __writing code__. I love `R` and it's my earnest hope that you will also learn to love `R`!^[I love `R` so much that this syllabus and most of our other class materials are actually built using `R`. Check it out `r paste0("[on Github here](", META$repo_url , ")")`.]
 
 For some of you, this may be your first time doing any computer programming at all---no problem! We don't assume prior experience, and we'll be spending quite a lot of time familiarizing you with how `R` thinks and helping you get a handle on the basics of programming. 
 

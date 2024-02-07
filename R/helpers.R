@@ -66,16 +66,41 @@ teaching_team_details <- function(role) {
   }
 }
 
+
+
+set_yaml <- function(named_list) {
+  cat("---\n")
+  for (key in names(named_list)) {
+    cat(
+      glue::glue("{key}: {named_list[[key]]}\n\n")
+    )
+  }
+  cat("---\n")
+}
+
+set_thanks <- function() {
+  thanks <- stringr::str_c(
+    META$thanks,
+    glue::glue("Course material is available [on Github here]({META$repo_url})."),
+    sep = " ")
+  set_yaml(list("thanks" = thanks))
+}
+
 set_authors <- function(role = "Instructors") {
   authors <- c()
   for(i in META$staff[[stringr::str_to_lower(role)]]) {
-    authors <- append(authors, i$name)
+    if ("affiliation" %in% names(i)) {
+      name_affil <- stringr::str_c(
+        i$name,
+        glue::glue("^[{i$title}, {i$affiliation}]")
+      )
+      authors <- append(authors, name_affil)
+    } else {
+      authors <- append(authors, i$name)
+    }
   }
-  cat(glue::glue("---
-  author: {authors}
-  ---"))
+  set_yaml(list("author" = authors))
 }
-
 
 get_zotero <- function(library, user = META$zotuser) {
   tmp_bib <- tempfile()
