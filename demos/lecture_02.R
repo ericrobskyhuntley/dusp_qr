@@ -1,3 +1,7 @@
+# The provided data is 5-year ACS estimates of renter- and owner-occupied housing units
+# per census tract in 2021. I created this file using an R script! For the curious, it's
+# here: https://github.com/ericrobskyhuntley/dusp_qr/blob/main/demos/lecture_02_data.R
+
 # Barplots
 
 tracts_by_county <- read.csv('l02_demo_grouped.csv')
