@@ -17,11 +17,14 @@ df <- tidycensus::get_acs(
   readr::write_csv("l02_demo.csv")
 
 df |>
+  dplyr::filter(
+    pct_rent_occ > 50
+  ) |>
   dplyr::group_by(county) |>
   dplyr::summarize(
-    tracts = dplyr::n()
+    maj_renter_count = dplyr::n()
   ) |>
   dplyr::arrange(
-    desc(tracts)
+    desc(maj_renter_count)
   ) |>
   readr::write_csv("l02_demo_grouped.csv")

@@ -2,7 +2,7 @@
 
 tracts_by_county <- read.csv('l02_demo_grouped.csv')
 
-barplot(tracts_by_county$tracts, names.arg = tracts_by_county$county, las=2)
+barplot(tracts_by_county$maj_renter_count, names.arg = tracts_by_county$county, las=2)
 
 # Histograms
 
