@@ -1,342 +1,153 @@
 ---
-title: "Recitation 2"
-subtitle: |
-  | 11.220, Spring 2021
-  | Modified from Sebastian Sandoval Olascoaga
-author: "Benjamin Preis"
-date: "03/03/2021"
-output:
-  beamer_presentation:
-    slide_level: 2
-    theme: "Boadilla"
-classoption: t
+title: "Introduction to R"
+subtitle: "Recitation 2"
+author: "Eric Robsky Huntley"
+thanks: "This is a substantial extension and rewrite of material originally developed by Sebastian Sandoval Olascoaga and subsequently revised by Ben Preis."
+date: "Spring 2024"
+output: 
+  pdf_document: 
+    template: "../../templates/syllabus.latex"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,hold=TRUE,warning=FALSE,size="small",message=FALSE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  hold=TRUE,
+  warning = FALSE,
+  message = FALSE,
+  size = 'huge'
+  )
 ```
 
-## Agenda
-\tableofcontents[hideallsubsections]
+# Where is R? (The Working Directory)
 
-
-# Goals
-
-1. Make sure R and R Studio is working
-2. Import packages
-3. Learn how to set your working directory
-4. Load the data
-5. Learn new and fun skills for PSet - 1 such as:
-    a. Cross tabulations
-    b. Conditional tabulation (aka conditional distribution)
-    c. Histogram (aka distribution)
-    d. Median
-    e. Pie Charts
-    f. Kernel density
-    
-# Some More Introductory R
-
-## R Packages
-
-What are R packages, and why use them?
-
-- R packages are collections of functions and data sets developed by the community.
-- They increase the power of R by improving existing base R functionalities, or by adding new ones.  
-
-How to install an R Package?
-
-- The most common way is to use the CRAN repository, then you need the name of the package and use the command.
-- You can also use RStudio's interface to install a package.
-- You only need to do this **once** and then never again.
-
-```{r Install a package, echo=TRUE,eval=FALSE}
-install.packages("rio")
-install.packages("xtable")
-install.packages("knitr")
-install.packages("janitor")
-```
-
-## R Packages
-
-- Once a package is installed, you have to tell R that you plan to use the package
-- You only do this once per R file, typically at the very top of the file
-
-```{r, echo=TRUE,eval=TRUE,message=FALSE}
-library(rio)
-library(xtable)
-library(knitr)
-library(janitor)
-```
-
-- **Note**: When you install a package, you put the package names in quotes, when you call a package to use, you do not.
-
-## Working Directory
-
-- In the beginning, R doesn't know where on your computer to hang out.
-- You can check where it is looking for things on your computer by typing the command getwd() in the console.
-- **Note**: In an RMarkdown file, the default working directory is wherever your .Rmd file is saved.
+When you open `R`, it has a directory that it is working out of. We can confirm this by running the `getwd()` command (for 'get working directory').
 
 ```{r,echo=TRUE,eval=FALSE}
 getwd()
 ```
-\normalsize
 
-- How can you find the path to your directory? 
-    - On a mac, you can use finder, right-click the QR folder and choose "get info".
-    - Highlight everything to the right of "where:" and paste it between the quotes above.
+This is the place it's going to look for any files that you may want to read, and where it's going to put any files that you write from your `R` process. Oftentimes, this will not be ideal for your purposes. If you create a new script in a folder, you might want that folder to serve as the place for `R` to start looking. 
 
-\normalsize
+To illustrate: say my working path is `/Users/ehuntley/Desktop/`---this is where your Desktop files are stored on your disk on a Mac. (The Windows equivalent is `C:\Users\username\Desktop`.) This means that I can reference a file on the desktop in my `R` environment by simply calling its name with no prefix. In other words, looking for a file using `data.csv` will be the same as looking for `/Users/ehuntley/Desktop/data.csv`. But then suppose that I have a folder on my desktop for all my QR assignments (let's call it `QR`). Within that directory, I have a `recitations` folder, an `exercises` folder, etc. Then, let's say within my `recitations` folder, I create a folder called `recitation_02`, which has a `data.csv` file in it. To locate this file when `R`'s current working directory is the desktop, I'd have to specify a location like this: `qr/recitations/recitation_02/data.csv`. It works, but it's a lot of text and a lot of typing. So we might want to __set the working directory__ to be `recitation_02` (meaning that `data.csv` can be located using only its name).
 
-## Setting the Working Directory
+We can set the working directory to `recitation_02` like this:
 
-::: {.block}
-### Setting the Working Directory in .RMarkdown
-- Probably unnecessary, as the default working directory is the directory in which your .Rmd file is saved.
-- Goes at the top of your .Rmd file, with your other commands in the $\mathtt{\{r\;setup\}}$ commands.
-```{r,eval=FALSE,echo=TRUE}
-#```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,root.dir = normalizePath(
-  "/Users/benjaminpreis/Dropbox (MIT)/MIT/DUSP/
-  2020-2021/Spring 2021/11.220/Recitations/Recitation 2")) 
-#```
-```
-:::
-
-
-::: {.block}
-### Setting the Working Directory in .R
-- Use the $\mathtt{setwd()}$ command.
-- Best to set at the beginning of your .R file.
-\small
-```{r,eval=FALSE}
-setwd("/Users/benjaminpreis/Dropbox (MIT)/MIT/DUSP/2020-2021/Spring 2021/11.220/Recitations/Recitation 2")
-```
-\normalsize
-:::
-
-
-
-## Loading Data
-
-- With your working directory set, you can now easily load files into RStudio that are in that same working directory
-
-- A very simple way to import data from many common file formats is with the rio package.
-
-- With the "import" command from the package "rio", you create a new dataframe called "mydata".
-    - You should think of a "dataframe" as an excel spreadsheet with columns and rows.
-
-```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
-mydata <- import("WRLURI.xlsx")
-nrow(mydata) # number of rows in our dataset.
+```{r, eval=FALSE}
+setwd("/Users/ehuntley/Desktop/qr/recitations/recitation_02")
 ```
 
-# New Skills
+This is a good thing to do at the very top of your file!
 
-## Cross Tabulations
+# Reading Data
 
-::: {.block}
-### How to Do Cross Tabluations in R
-Cross tabulation can be done in many ways. One of the ways is by using the $\mathtt{xtabs}$ function in the $\mathtt{xtable}$ library.
-:::
-
-
-```{r,echo=FALSE}
-mydata <- import("WRLURI.xlsx")
-```
-```{r}
-library(xtable)
-xtabs(~local, data=mydata) 
-```
-
-- This table tells us that local councils, managers, and commissioners are very involved (5) in affecting the residential building activities and/or growth management procedures of a jurisdiction. 
-
-## Another Cross Tabulation Example
+For this recitation we are going to use American Community Survey (ACS) 5-year estimates of occupant tenure by housing unit. (In other words, renter- and owner-occupancy.) I've provided this data as a CSV. We can read the CSV into an `R` dataframe using _either_ the `read.csv()` function from base `R` or the `read_csv()` function from the tidyverse's `readr` library (which gets installed as a component of the `tidyverse`). For our purposes, they do the same thing, though the `read_csv()` function will read the CSV in a way that leads processing on it to be slightly faster.
 
 ```{r}
-xtabs(~local+pressure, data=mydata)
+# These do the same thing!
+df <- read.csv('data/lecture_02_demo.csv')
+# Except this one _can_ make your code run a little faster...
+library(readr)
+df <- read_csv('data/lecture_02_demo.csv')
 ```
 
-- This table suggests that places with very involved community pressure tend to have very involved local councils, managers, and commissioners in affecting the residential building activities and/or growth management procedures of a jurisdiction
+First, examine your dataframe. (I.e., click on it in the `RStudio` 'environment' pane, or run `View(df)`). You'll see that it contains percentage values for both renter- and owner-occupied housing units. These are both continuous variables.
 
-## Conditional Cross Tabulation Example
-
-- Let's say you only wanted to understand variation of local involvement only in counties with very active involvement.
-- That would mean you wanted to understand official and community involvement *conditional on* high county involvement
-- Thus, we would look at conditional cross-tabs.
-```{r}
-xtabs(~local+pressure,countyleg==5,data=mydata)
-```
-
-- In this table, we're only looking at the subset of the data where county involvement is high.
-
-## Expressing Results in Percentage Terms
-
-::: {.block}
-###
-Use the $\mathtt{tabyl()}$ function from the $\mathtt{janitor}$ library.
-:::
-
-- Example using the 'pipe' syntax
-\small
-```{r,message=FALSE}
-library(janitor)
-tabyl(mydata,pressure)
-```
-\normalsize
-
-<!-- ## Cross Tabulations with Percentage Terms -->
-
-<!-- \footnotesize -->
-<!-- ```{r} -->
-<!-- mydata %>% tabyl(local, pressure) %>% -->
-<!--   # "adorn_totals" gives us the sum of every row & column of our table -->
-<!--   adorn_totals(c("row", "col")) %>% -->
-<!--   # "adorn_percentages" gives us the percentages of each row -->
-<!--   adorn_percentages("row") %>% -->
-<!--   # "adorn_pct_formatting" formats the table as described above -->
-<!--   adorn_pct_formatting(rounding = "half up", digits = 0) %>% -->
-<!--   # "adorn_ns" gives us the percentages and numbers (in parenthesis) -->
-<!--   adorn_ns() %>% -->
-<!--   # "adorn_title" allows us to combine the row and column titles -->
-<!--   adorn_title("combined") %>% -->
-<!--   # We use "knitr::kable() to have a better looking table -->
-<!--   # and kable_styling to make it fit on the page! -->
-<!--   knitr::kable()%>%kableExtra::kable_styling(font_size = 7) -->
-<!-- ``` -->
-<!-- \normalsize -->
-
-## Conditional tabulations
-
-In case we want to tabulate one variable conditional upon the certain value of another variable, it can be done in the following way:
+Let's say, though that we were interested in identifying which tracts were majority renter. We can create a new column (`maj_renter`) that indicates this using a boolean (i.e., `TRUE`/`FALSE` value). We'll use the `mutate()` function from `dplyr` (which, again, is installed with the `tidyverse`). This function allows us to calculate a new column (or re-calculate an existing column) using the values of other columns. Let's do all of this using a single pipe---read through the annotations to see how this is working!
 
 ```{r}
-xtabs(~local, pressure==5, data=mydata)
+library(dplyr)
+# Read data
+df <- read_csv('data/lecture_02_demo.csv') |>
+  # `|>` passes results of read_csv to mutate
+  dplyr::mutate(
+    # Calculate a new column called `maj_renter`
+    # which is the result of testing whether each
+    # value of `pct_rent_occ` is greater than
+    # 50.
+    maj_renter = pct_rent_occ > 50
+  )
 ```
 
-- Which is identical to the fifth column of the whole cross-tab table:
+Examine the results---note the new column you have to work with, and that it takes one of two values, indicating whether the truth test `pct_rent_occ > 50` was `TRUE` or `FALSE` for each row.
 
-```{r,echo=FALSE}
-xtabs(~local+pressure, data=mydata)
+# Frequency Table
+
+Now, let's determine how many tracts are majority renter and how many are not. This is known as a __frequency table__. To calculate this quickly, we'll use the `xtabs()` function, which comes with the base `R` `stats` package.
+
+We pass in the dataframe to the `data` parameter of `xtabs()` and pass it a function (indicated by the `~` syntax) that indicates which variables we're summarizing by, separated by a `+` sign. To calculate a frequency table (which is only a single variable), we just pass the `maj_renter` variable.
+
+```{r}
+xtabs(~maj_renter, data=df)
 ```
 
-# Visualizing Data
+# Cross Tabulation
 
-## Histograms
+But frequently, we want to calculate frequencies for multiple combinations of variables. For example, the number of tracts that are majority- or minority- renter for each county in Massachusetts (given in the `county` column). All we need to do is add the `county` column to our formula in the `xtabs` function, like so...
 
-- The following command plots a histogram.
-- Note that "breaks" is used to assign the number of equaled spaced bins we want in our histogram.
+```{r}
+xtabs(~county + maj_renter, data=df)
+```
 
-\small
-```{r,eval=FALSE}
-hist(mydata$meanfaminc2000, 
+We can see that the relative number of tracts that are majority-renter varies widely across the state, though we see predictably higher rates in Suffolk County (Boston), and, to a lesser extent, Middlesex County (e.g., Cambridge, Somerville, Medford)  Hampden County (e.g., Springfield), and Worcester County (e.g., Worcester).
+
+# Histograms
+
+Cross-tabulations and frequency tables like those above have gotten us part of the way to investigating patterns in our data. But to really get a sense of the shape of our data's distribution, we can use histograms and kernel density graphs. Recall that a histogram is a visual representation of frequency distribution, constructed by counting observations falling into (usually) regularly-spaced intervals.
+
+For example, we can create a histogram of the percentage of housing units that are renter occupied in MA census tracts using the `hist()` function.
+
+```{r}
+hist(df$pct_rent_occ, 
      # Add a title
-     main="Histogram of Mean Family Income by town in 2000",
+     main="Histogram of % Renter Occupancy in Massachusetts",
      # Label the x-axis
-     xlab="Mean Family Income by town in 2000",
+     xlab="% Renter Occupancy",
      # Label the y-axis
      ylab = "Frequency",
      #Tell R how man breaks to have
-     breaks=15) 
+     breaks=20) 
 ```
+Note that we're dealing with what we'd refer to as a long right tail---there is a large range of values lying above the most frequently observed values. Try playing with the `breaks` parameter: a larger number will yield smaller breaks and therefore a less 'smoothed' representation of the data's distribution.
 
-```{r,eval=FALSE}
-hist(mydata$meanfaminc2000, 
-     xlab="Mean Family Income by town in 2000",
+This is an __absolute frequency__, which is to say a measure of counts. If we wanted to generate a histogram depicting _density_ so that the area under the histogram equalled `1`, we would simply need to set the `freq` parameter equal to `FALSE`.
+
+```{r}
+hist(df$pct_rent_occ, 
+     main="Histogram of % Renter Occupancy in Massachusetts",
+     xlab="% Renter Occupancy",
      ylab = "Frequency",
-     breaks=15,
-     main="Histogram of Mean Family Income by town in 2000") 
+     breaks=20,
+     freq = FALSE) 
 ```
 
-## Histograms
-```{r,eval=TRUE,echo=FALSE}
-hist(mydata$meanfaminc2000, 
-     # Add a title
-     main="Histogram of Mean Family Income by town in 2000",
-     # Label the x-axis
-     xlab="Mean Family Income by town in 2000",
-     # Label the y-axis
-     ylab = "Frequency", breaks=15) 
-```
++ You try it! Swap out owner-occupancy. What do you notice about how the two shaped are related (and why might this be)?
 
-## Kernel density
+# Kernel density
 
-- Kernel density graph is a simple way to visualize histograms as a distribution.
+A different method of visualizing a variable distribution is a __kernel density__ plot. This is much like a histogram, except it visualizes the data continuously by averaging the densities around each potential value of the variable of interest. In other words: it's a smoothing function.
 
-- **Note**: This command requires not having missing values in the variable being graphed as it is with our variable. 
-    - In that case, we need to remove those missing/NA values; only then, the density graph can be plotted. It can be done by the following:
+To generate a kernel density, we simply `plot()` the results of applying the `density()` function to a given variable.
 
-\small
-```{r,eval=FALSE}
-plot(density(na.omit(mydata$meanfaminc2000)), 
-  # Label the x-axis
-  xlab="Mean Family Income by town in 2000",
-  # Label the y-axis
-  ylab="Density",
-  # Add title
-  main = "Kernel Desnity of Mean Family Income by town in 2000")
-```
-
-## Kernel density
-
-```{r,eval=TRUE,echo=FALSE}
-plot(density(na.omit(mydata$meanfaminc2000)), 
-     # Label the x-axis
-     xlab="Mean Family Income by town in 2000",
-     # Label the y-axis
-     ylab="Density",
-     # Add title
-     main = "Kernel Desnity of Mean Family Income by town in 2000")
-```
-
-## Pie Chart
-
-What if we want to present a tabulation visually?
-
-- A useful way is to do a pie chart!
-
-Ideally, you could just do:
-\small
-```{r,eval=FALSE}
-pie(mydata$local)
-```
-\normalsize
-
-But that won't work with NA values!
-
-Instead:
-\small
-```{r,eval=FALSE}
-pie(table(mydata$local), 
-    # We add a title
-    main = "Pie Chart of the variable 'local'")
-```
-
-## Pie Chart
-
-```{r,echo=FALSE,fig.height=5}
-pie(table(mydata$local), 
-    # We add a title
-    main = "Pie Chart of the variable 'local'")
-```
-
-## Summary statistics
-
-What if we would like to know the basic statistics of a variable?
-
-- The command summary provides us with the mean, median, 25th, and 75th quartiles, min, max, NA:
-
-\small
 ```{r}
-summary(mydata$meanfaminc2000)
+plot(density(df$pct_rent_occ), 
+  xlab = "% Renter-Occupancy",
+  ylab = "Density",
+  main = "Kernel Density of % Renter-Occupancy in Massachusetts"
+  )
 ```
-\normalsize
 
-What if we would like to know the sum of a variable?
+Or, to do the same thing using pipes...
 
-- *Note*: If there are NA values, must use the $\mathtt{na.rm}$ argument
-
-\small
-```{r}
-sum(mydata$meanfaminc2000, na.rm=TRUE)
-median(mydata$meanfaminc2000,na.rm=TRUE)
+```{r,eval=FALSE}
+df$pct_rent_occ |> 
+  density() |>
+  plot(
+    xlab = "% Renter-Occupancy",
+    ylab = "Density",
+    main = "Kernel Density of % Renter-Occupancy in Massachusetts"
+  )
 ```
+
+That's all for today!
