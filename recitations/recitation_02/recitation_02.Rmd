@@ -1,0 +1,342 @@
+---
+title: "Recitation 2"
+subtitle: |
+  | 11.220, Spring 2021
+  | Modified from Sebastian Sandoval Olascoaga
+author: "Benjamin Preis"
+date: "03/03/2021"
+output:
+  beamer_presentation:
+    slide_level: 2
+    theme: "Boadilla"
+classoption: t
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,hold=TRUE,warning=FALSE,size="small",message=FALSE)
+```
+
+## Agenda
+\tableofcontents[hideallsubsections]
+
+
+# Goals
+
+1. Make sure R and R Studio is working
+2. Import packages
+3. Learn how to set your working directory
+4. Load the data
+5. Learn new and fun skills for PSet - 1 such as:
+    a. Cross tabulations
+    b. Conditional tabulation (aka conditional distribution)
+    c. Histogram (aka distribution)
+    d. Median
+    e. Pie Charts
+    f. Kernel density
+    
+# Some More Introductory R
+
+## R Packages
+
+What are R packages, and why use them?
+
+- R packages are collections of functions and data sets developed by the community.
+- They increase the power of R by improving existing base R functionalities, or by adding new ones.  
+
+How to install an R Package?
+
+- The most common way is to use the CRAN repository, then you need the name of the package and use the command.
+- You can also use RStudio's interface to install a package.
+- You only need to do this **once** and then never again.
+
+```{r Install a package, echo=TRUE,eval=FALSE}
+install.packages("rio")
+install.packages("xtable")
+install.packages("knitr")
+install.packages("janitor")
+```
+
+## R Packages
+
+- Once a package is installed, you have to tell R that you plan to use the package
+- You only do this once per R file, typically at the very top of the file
+
+```{r, echo=TRUE,eval=TRUE,message=FALSE}
+library(rio)
+library(xtable)
+library(knitr)
+library(janitor)
+```
+
+- **Note**: When you install a package, you put the package names in quotes, when you call a package to use, you do not.
+
+## Working Directory
+
+- In the beginning, R doesn't know where on your computer to hang out.
+- You can check where it is looking for things on your computer by typing the command getwd() in the console.
+- **Note**: In an RMarkdown file, the default working directory is wherever your .Rmd file is saved.
+
+```{r,echo=TRUE,eval=FALSE}
+getwd()
+```
+\normalsize
+
+- How can you find the path to your directory? 
+    - On a mac, you can use finder, right-click the QR folder and choose "get info".
+    - Highlight everything to the right of "where:" and paste it between the quotes above.
+
+\normalsize
+
+## Setting the Working Directory
+
+::: {.block}
+### Setting the Working Directory in .RMarkdown
+- Probably unnecessary, as the default working directory is the directory in which your .Rmd file is saved.
+- Goes at the top of your .Rmd file, with your other commands in the $\mathtt{\{r\;setup\}}$ commands.
+```{r,eval=FALSE,echo=TRUE}
+#```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,root.dir = normalizePath(
+  "/Users/benjaminpreis/Dropbox (MIT)/MIT/DUSP/
+  2020-2021/Spring 2021/11.220/Recitations/Recitation 2")) 
+#```
+```
+:::
+
+
+::: {.block}
+### Setting the Working Directory in .R
+- Use the $\mathtt{setwd()}$ command.
+- Best to set at the beginning of your .R file.
+\small
+```{r,eval=FALSE}
+setwd("/Users/benjaminpreis/Dropbox (MIT)/MIT/DUSP/2020-2021/Spring 2021/11.220/Recitations/Recitation 2")
+```
+\normalsize
+:::
+
+
+
+## Loading Data
+
+- With your working directory set, you can now easily load files into RStudio that are in that same working directory
+
+- A very simple way to import data from many common file formats is with the rio package.
+
+- With the "import" command from the package "rio", you create a new dataframe called "mydata".
+    - You should think of a "dataframe" as an excel spreadsheet with columns and rows.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+mydata <- import("WRLURI.xlsx")
+nrow(mydata) # number of rows in our dataset.
+```
+
+# New Skills
+
+## Cross Tabulations
+
+::: {.block}
+### How to Do Cross Tabluations in R
+Cross tabulation can be done in many ways. One of the ways is by using the $\mathtt{xtabs}$ function in the $\mathtt{xtable}$ library.
+:::
+
+
+```{r,echo=FALSE}
+mydata <- import("WRLURI.xlsx")
+```
+```{r}
+library(xtable)
+xtabs(~local, data=mydata) 
+```
+
+- This table tells us that local councils, managers, and commissioners are very involved (5) in affecting the residential building activities and/or growth management procedures of a jurisdiction. 
+
+## Another Cross Tabulation Example
+
+```{r}
+xtabs(~local+pressure, data=mydata)
+```
+
+- This table suggests that places with very involved community pressure tend to have very involved local councils, managers, and commissioners in affecting the residential building activities and/or growth management procedures of a jurisdiction
+
+## Conditional Cross Tabulation Example
+
+- Let's say you only wanted to understand variation of local involvement only in counties with very active involvement.
+- That would mean you wanted to understand official and community involvement *conditional on* high county involvement
+- Thus, we would look at conditional cross-tabs.
+```{r}
+xtabs(~local+pressure,countyleg==5,data=mydata)
+```
+
+- In this table, we're only looking at the subset of the data where county involvement is high.
+
+## Expressing Results in Percentage Terms
+
+::: {.block}
+###
+Use the $\mathtt{tabyl()}$ function from the $\mathtt{janitor}$ library.
+:::
+
+- Example using the 'pipe' syntax
+\small
+```{r,message=FALSE}
+library(janitor)
+tabyl(mydata,pressure)
+```
+\normalsize
+
+<!-- ## Cross Tabulations with Percentage Terms -->
+
+<!-- \footnotesize -->
+<!-- ```{r} -->
+<!-- mydata %>% tabyl(local, pressure) %>% -->
+<!--   # "adorn_totals" gives us the sum of every row & column of our table -->
+<!--   adorn_totals(c("row", "col")) %>% -->
+<!--   # "adorn_percentages" gives us the percentages of each row -->
+<!--   adorn_percentages("row") %>% -->
+<!--   # "adorn_pct_formatting" formats the table as described above -->
+<!--   adorn_pct_formatting(rounding = "half up", digits = 0) %>% -->
+<!--   # "adorn_ns" gives us the percentages and numbers (in parenthesis) -->
+<!--   adorn_ns() %>% -->
+<!--   # "adorn_title" allows us to combine the row and column titles -->
+<!--   adorn_title("combined") %>% -->
+<!--   # We use "knitr::kable() to have a better looking table -->
+<!--   # and kable_styling to make it fit on the page! -->
+<!--   knitr::kable()%>%kableExtra::kable_styling(font_size = 7) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+## Conditional tabulations
+
+In case we want to tabulate one variable conditional upon the certain value of another variable, it can be done in the following way:
+
+```{r}
+xtabs(~local, pressure==5, data=mydata)
+```
+
+- Which is identical to the fifth column of the whole cross-tab table:
+
+```{r,echo=FALSE}
+xtabs(~local+pressure, data=mydata)
+```
+
+# Visualizing Data
+
+## Histograms
+
+- The following command plots a histogram.
+- Note that "breaks" is used to assign the number of equaled spaced bins we want in our histogram.
+
+\small
+```{r,eval=FALSE}
+hist(mydata$meanfaminc2000, 
+     # Add a title
+     main="Histogram of Mean Family Income by town in 2000",
+     # Label the x-axis
+     xlab="Mean Family Income by town in 2000",
+     # Label the y-axis
+     ylab = "Frequency",
+     #Tell R how man breaks to have
+     breaks=15) 
+```
+
+```{r,eval=FALSE}
+hist(mydata$meanfaminc2000, 
+     xlab="Mean Family Income by town in 2000",
+     ylab = "Frequency",
+     breaks=15,
+     main="Histogram of Mean Family Income by town in 2000") 
+```
+
+## Histograms
+```{r,eval=TRUE,echo=FALSE}
+hist(mydata$meanfaminc2000, 
+     # Add a title
+     main="Histogram of Mean Family Income by town in 2000",
+     # Label the x-axis
+     xlab="Mean Family Income by town in 2000",
+     # Label the y-axis
+     ylab = "Frequency", breaks=15) 
+```
+
+## Kernel density
+
+- Kernel density graph is a simple way to visualize histograms as a distribution.
+
+- **Note**: This command requires not having missing values in the variable being graphed as it is with our variable. 
+    - In that case, we need to remove those missing/NA values; only then, the density graph can be plotted. It can be done by the following:
+
+\small
+```{r,eval=FALSE}
+plot(density(na.omit(mydata$meanfaminc2000)), 
+  # Label the x-axis
+  xlab="Mean Family Income by town in 2000",
+  # Label the y-axis
+  ylab="Density",
+  # Add title
+  main = "Kernel Desnity of Mean Family Income by town in 2000")
+```
+
+## Kernel density
+
+```{r,eval=TRUE,echo=FALSE}
+plot(density(na.omit(mydata$meanfaminc2000)), 
+     # Label the x-axis
+     xlab="Mean Family Income by town in 2000",
+     # Label the y-axis
+     ylab="Density",
+     # Add title
+     main = "Kernel Desnity of Mean Family Income by town in 2000")
+```
+
+## Pie Chart
+
+What if we want to present a tabulation visually?
+
+- A useful way is to do a pie chart!
+
+Ideally, you could just do:
+\small
+```{r,eval=FALSE}
+pie(mydata$local)
+```
+\normalsize
+
+But that won't work with NA values!
+
+Instead:
+\small
+```{r,eval=FALSE}
+pie(table(mydata$local), 
+    # We add a title
+    main = "Pie Chart of the variable 'local'")
+```
+
+## Pie Chart
+
+```{r,echo=FALSE,fig.height=5}
+pie(table(mydata$local), 
+    # We add a title
+    main = "Pie Chart of the variable 'local'")
+```
+
+## Summary statistics
+
+What if we would like to know the basic statistics of a variable?
+
+- The command summary provides us with the mean, median, 25th, and 75th quartiles, min, max, NA:
+
+\small
+```{r}
+summary(mydata$meanfaminc2000)
+```
+\normalsize
+
+What if we would like to know the sum of a variable?
+
+- *Note*: If there are NA values, must use the $\mathtt{na.rm}$ argument
+
+\small
+```{r}
+sum(mydata$meanfaminc2000, na.rm=TRUE)
+median(mydata$meanfaminc2000,na.rm=TRUE)
+```
