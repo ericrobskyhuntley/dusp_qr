@@ -1,0 +1,69 @@
+---
+title: "Cross-Tabulating and Analyzing Distributions"
+subtitle: "Exercise 2"
+thanks: "This exercise is written by Justin Steil, with substantial revisions by Eric Robsky Huntley."
+output: 
+  pdf_document: 
+    template: '../templates/syllabus.latex'
+---
+
+# Measurement
+
+The information used is in quantitative analysis generally comes into existence through a process of measurement that requires defining and exercising judgment about what and how to measure. How do complex ideas get turned into a clearly-specified definition that can be measured, presented, discussed, and analyzed from a quantitative perspective?  Think of a concept that is important in your areas of interest. Define two different quantifiable measures of that concept and write 4-6 sentences discussing the trade-offs between these different measures.
+
+Some dimensions you could think about:
+
++ Is it reliable? Will different observers all agree on how the concept is applied?
++ Is it helpful? Does it distinguish between meaningful differences without exaggerating trivial ones?
++ Does it strike the right balance between a holistic approach and a reductionist one? Is it “too fuzzy" at the expense of being useful? Is it “too mechanical” at the expense of capturing what we actually care about?
++ Is it valid? Are you actually measuring what you are hoping to measure? 
++ Is it workable? Will someone be able to actually obtain the information that you recommend?
+
+# Getting to Know Your Data
+
+Examine this table that shows the Per Capita Income in the 8 most populated neighborhoods in Boston. Manually create a rough sketch of a box plot that shows the minimum, maximum, first and third quartiles, and median value.
+
+Neighborhood | Per Capita Income
+---|---
+Dorchester | \$29,767
+Brighton | \$41,261
+Roxbury | \$20,978
+East Boston | \$31,473
+Jamaica Plain | \$51,655
+Hyde Park | \$32,744
+South Boston | \$64,745
+West Roxbury | \$47,836
+
+_Source: U.S. Census Bureau, 2015-2019 American Community Survey, BPDA Research Division Analysis_
+
+# Getting to Know Your Data in R
+
+In this assignment, we will use data from the Massachusetts Local Housing Regulation Database (LHRD) to learn more about the zoning process and about quantitative tools to describe data. We focus on getting a "feel" for some of the data—and the underlying information therein—by using frequencies, distributions, and cross-tabulations.
+
+The LHRD collected information about numerous aspects of the zoning codes and planning practices in all 170 towns and cities in the greater Boston metropolitan area in 2005, except for Boston itself. You can think of the database as capturing most aspects of suburban planning.
+
+You will use the database contained in `masszoning.csv`. Each observation captures one Massachusetts town/city. The data dictionary is available in the file `codebook_MASSZONING.pdf`. This PDF file also contains an explanation of the data collection and design process.
+
+## Getting Started
+
+Many municipalities implementing smart-growth principles do so by designated specific areas—sometimes called clusters —with more flexible zoning. Usually, the intent is to obtain a mix of uses in a more walkable environment. Sometimes, these clusters get their own special zoning area or “planned unit development” in the zoning map. Sometimes, they are conceived as overlay districts: special areas that cross over two or more zoning districts, but in which regulated exceptions from the basic zoning guidelines are allowed.  In such clusters or flexible development areas, towns usually provide incentives for developers to build at higher densities.
+
+## Questions
+
+1. In order to obtain the classification of cluster development or planned development unit with its own overlay zoning district, one may need relatively-large parcels for development/redevelopment (as opposed to subdividing the land into small plots). Display the histogram of the distribution of minimum cluster development sizes (i.e., the column `clparcel`), using 10 equally-spaced bins. (Hint: the argument `breaks =` of the `hist()` function could be useful.)
+
+2. What is the median minimum size of a parcel or tract (again, `clparcel`) necessary under flexible development across towns in Massachusetts?
+
+3. Suburban cluster developments may also display open space requirements. Oftentimes, the idea is to allow for and to concentrate denser development in larger masses in exchange for more open (common) space. Display the histogram of the distribution of open space requirements in new cluster developments (`clopen`), using 40 equally-spaced bins. Can you see any interesting numerical patterns?
+
+4. What percentage of towns exclude wetlands, easements, or sloped land from calculations of minimum land area requirements (`mlaexclud`)?
+
+5. What percentage of towns impose shape rules on lots for development (`shaprule`)?
+
+6. What fraction of municipalities have inclusionary zoning provisions (`include`)? Of which type? Show your results in a bar chart or other graph that correctly represents numerical proportions.
+
+7. Some municipalities offer density bonuses—the ability to build more housing units than allowed as by zoning right—to developers erecting affordable housing. Tabulate the variable capturing the availability of such bonuses (`incbonus`) conditional on the town reporting any affordable units built under the inclusionary zoning provisions (`incdevs`). Do the same for towns that report no development under current affordable housing provisions. Can you draw a preliminary hypothesis about the effectiveness of density bonuses in this environment?
+
+8. One of the variables in the survey captures whether the town allows apartments above ground-floor commercial uses (`mfmixed`). Another question asks which process (e.g., special permit) is used for developers to be allowed to build multi-family housing, if they are at all (`mfallow`). Provide cross-tabulations of these two variables. What is the combination of the two that is more frequent in suburban Massachusetts?
+
+9. Some municipalities allow attached single-family homes, others do not (`townhous`). Similarly, some allow accessory units (e.g., a rental unit on the basement or attic---`accesapt`). Cross-tabulate these variables. Do you see any notable patterns?
