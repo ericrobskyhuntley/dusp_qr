@@ -111,6 +111,6 @@ Address | rent
 ---|---
 250 Suffolk St | \$1,200
 378 Appleton Ave | \$1,900
-58 Cabot Dr | \$2,00
+58 Cabot Dr | \$2,000
 
 First, use `R` to calculate the tenant's monthly income and store it in an object. Then, calculate the expected rent payment, storing it as an `R` object. Finally, create an `R` dataframe that has names taken from the above addresses, and two columns: the price and the monthly voucher subsidy (the rent minus the amount the tenant is expected to pay, which is the same in all cases. You can calculate this using either the `df$subsidy = ` or the `mutate()` function from `dplyr` (though try the latter)!
