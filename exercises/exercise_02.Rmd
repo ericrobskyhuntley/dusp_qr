@@ -9,7 +9,7 @@ output:
 
 # Getting to Know Your Data
 
-Examine this table that shows the Per Capita Income in the 8 most populated neighborhoods in Boston. Manually create a rough sketch of a box plot that shows the minimum, maximum, first and third quartiles, and median value.
+Examine this table that shows the Per Capita Income in the 8 most populated neighborhoods in Boston. Create (with your hands! Pens! Pencils! Smeared applesauce! Whatever!) a rough sketch of a box plot that shows the minimum, maximum, first and third quartiles, and median value.
 
 Neighborhood | Per Capita Income
 ---|---
