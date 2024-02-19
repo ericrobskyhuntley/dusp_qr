@@ -1,0 +1,179 @@
+---
+title: "Cross Tabulations & Summary Statistics"
+author: "Chenab Navalkha"
+date: "Spring 2024"
+output: pdf_document
+thanks: This is a substantial extension and rewrite of material originally developed
+  by Sebastian Sandoval Olascoaga and subsequently revised by Ben Preis and Gokul
+  Sampath.
+subtitle: Recitation 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  hold=TRUE,
+  warning = FALSE,
+  message = FALSE,
+  size = 'huge'
+  )
+```
+
+# Set Working Directorty
+
+
+To start, we'll set the Working Directory for this week's recitation along the same lines as last week. You'll want to start by downloading the recitation folder (with its data) to the appropriate place on your computer. 
+
+Once you have downloaded the recitation materials, use the `setwd()` function to specify the location of your working directory.
+
+
+```{r, eval=FALSE}
+setwd("/Users/chenabnavalkha/Desktop/QR/recitations/recitation_03/")
+```
+
+
+# Reading Data
+
+For this recitation we are going to use data on Boston building permits, accessed via the city's open data portal. This data set provides a wealth of information on Boston buildings, including the valuation of the building change, fees, owner, address, and parcel information.
+
+For this week, we've subsetted the data that we'll work with to include only residential buildings and permits related to work in the following cateogries: gas, electrical, plumbing, fire alarm, or interior/exterior work. 
+
+We've provided this data as a CSV. Read this CSV into an `R` dataframe using _either_ the `read.csv()` function from base `R` or the `read_csv()` function from the tidyverse's `readr` library. If you use `read_csv()`, remember to load the `tidyverse` package. 
+
+
+```{r, eval=TRUE, include=TRUE}
+library(tidyverse)
+bos_permits<-read_csv("boston_permits_recitation03.csv")
+```
+
+As a first step, examine your dataframe. To do this, you can either click on the dataframe name in the `RStudio` 'environment' pane, or run `View(df)`). 
+
+```{r, eval=FALSE, include=TRUE}
+View(bos_permits)
+```
+
+
+## Examining Variables of Interest
+
+Before we begin making tables, it's good practice to look at just the variables of interest to make sure nothing is awry.
+
+Use the `unique` function from base R to examine the unique Occupancy Types and Permit Descriptions present in our data:
+
+```{r, include=TRUE}
+unique(bos_permits$occupancytype)
+unique(bos_permits$description)
+```
+
+Our output shows the different building occupancy types represented in our subsetted permit data: "1-2FAM" indicates the number of residential units in each building, "Mixed" indicates mixed-use (residential+commercial) units, and "Multi" indicates buildings with 5+ units.
+
+Similarly, we see the different permit descriptions present in our dataset.
+
+
+
+# Making tables and checking frequencies
+
+
+We can use the `cross tabulation` function `xtabs`to look at the number of permits by occupancy type. We will be using the xtable package again.
+
+```{r, include=TRUE}
+library(xtable)
+xtabs(~occupancytype,data=bos_permits)
+```
+
+
+We can also compare two variables against each other. Here we are disaggregating the number of permit types ("description") by occupancy type.
+
+```{r,echo=TRUE}
+xtabs(~description+occupancytype,bos_permits)
+```
+
+
+Now, let's examine the frequency of our data.
+
+Here, we're using the `dplyr` command `pull` to specify which column variable we want R to summarize for us. 
+
+```{r, echo=TRUE}
+
+bos_permits |>
+  dplyr::pull(total_fees) |>
+  hist(breaks = 10)
+
+```
+
+
+
+# Summary Statistics
+
+
+The Boston Permit data includes information on the amount of permit fees charged. We may want to understand the basic statistics of the `total_fees` variable.
+
+The command `summary` provides us with the mean, median, 25th, and 75th quartiles, and minimum and maximum values:
+
+```{r, echo=TRUE}
+summary(bos_permits$total_fees)
+```
+
+## Mean and Median
+
+
+We can also look specifically at the mean and median of the total fees, as follows.
+
+**Note**: The `na.rm` argument in the function `mean` tells R how to handle missing values in the variable we are examining. When we set `na.rm=TRUE`, R removes missing values from its calculation.
+
+```{r, echo=TRUE}
+bos_permits |>
+  dplyr::pull(total_fees) |>
+  mean(na.rm=TRUE) 
+```
+
+Another way that we can do this is to use specific commands for `mean` and `median`. :
+
+```{r, echo=TRUE}
+mean(bos_permits$total_fees, na.rm=TRUE)
+
+median(bos_permits$total_fees, na.rm=TRUE)
+```
+
+
+## Quantiles
+
+Let's say we wanted to know the amount of the fee at the 20th, 40th, 60th, and 80th percentile (the quintiles), to do so, we'd use the quantile function.
+
+```{r, echo=TRUE}
+quantile(bos_permits$total_fees,probs=c(.2,.4,.6,.8))
+```
+
+## Quantiles with Nested Function
+
+You can combine the $\mathtt{seq}$ function that we saw in recitation 1 to make this a little easier:
+
+```{r, echo=TRUE}
+quantile(bos_permits$total_fees,probs=seq(.2,.8,by=.2))
+```
+
+
+## Box plots
+
+Box plots are one way that we can visualize the spread of our data. Box plots allow us to see much more than your usual $\mathtt{summary()}$ function. 
+
+
+The code below shows you how to make a single box plot for the data on permit fees.
+
+```{r, echo=TRUE, eval=TRUE}
+boxplot(bos_permits$total_fees,
+        main = "How much were building permit fees?",
+        ylab = "Fee in dollars")
+```
+
+Now, we'll create a box plot with the fees broken out by type of building.
+
+- *Note*: Remember that the order to put the data in matter a lot. The data on the left of the tilde will be on the y axis. This is usually reserved for your dependent variable.
+
+```{r,fig.height=5.5,eval=TRUE}
+boxplot(bos_permits$total_fees~bos_permits$occupancytype,
+        main = "How much were building permit fees,by building type?",
+        xlab = "Occupancy Type",
+        ylab = "Fee in dollars")
+```
+That's all for today!

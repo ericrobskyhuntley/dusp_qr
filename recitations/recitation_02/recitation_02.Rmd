@@ -1,12 +1,15 @@
 ---
 title: "Introduction to R"
-subtitle: "Recitation 2"
 author: "Eric Robsky Huntley"
-thanks: "This is a substantial extension and rewrite of material originally developed by Sebastian Sandoval Olascoaga and subsequently revised by Ben Preis."
 date: "Spring 2024"
-output: 
-  pdf_document: 
-    template: "../../templates/syllabus.latex"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    template: ../../templates/syllabus.latex
+subtitle: Recitation 2
+thanks: This is a substantial extension and rewrite of material originally developed
+  by Sebastian Sandoval Olascoaga and subsequently revised by Ben Preis.
 ---
 
 ```{r setup, include=FALSE}
