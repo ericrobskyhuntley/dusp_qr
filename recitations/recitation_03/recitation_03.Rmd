@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
   )
 ```
 
-# Set Working Directorty
+# Set Working Directory
 
 
 To start, we'll set the Working Directory for this week's recitation along the same lines as last week. You'll want to start by downloading the recitation folder (with its data) to the appropriate place on your computer. 
