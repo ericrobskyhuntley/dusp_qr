@@ -35,145 +35,165 @@ setwd("/Users/chenabnavalkha/Desktop/QR/recitations/recitation_03/")
 
 # Reading Data
 
-For this recitation we are going to use data on Boston building permits, accessed via the city's open data portal. This data set provides a wealth of information on Boston buildings, including the valuation of the building change, fees, owner, address, and parcel information.
+For this recitation we are going to use data on Boston rents. The dataset we'll use is scraped from Padmapper.com, an online marketplace for rental units, and published by Jeff Kaufman. (You can see more of Jeff's analyses and find more information on the dataset here: https://www.jefftk.com/p/boston-rents-over-time-ii). 
 
-For this week, we've subsetted the data that we'll work with to include only residential buildings and permits related to work in the following cateogries: gas, electrical, plumbing, fire alarm, or interior/exterior work. 
+The data saved in this week's recitation materials combines the scraped data on rental prices and number of bedrooms with a City of Boston data file from which we pulled in neighborhood information for each apartment listing. 
 
 We've provided this data as a CSV. Read this CSV into an `R` dataframe using _either_ the `read.csv()` function from base `R` or the `read_csv()` function from the tidyverse's `readr` library. If you use `read_csv()`, remember to load the `tidyverse` package. 
 
 
 ```{r, eval=TRUE, include=TRUE}
 library(tidyverse)
-bos_permits<-read_csv("boston_permits_recitation03.csv")
+bos_rents<-read_csv("boston_rents.csv")
 ```
 
 As a first step, examine your dataframe. To do this, you can either click on the dataframe name in the `RStudio` 'environment' pane, or run `View(df)`). 
 
 ```{r, eval=FALSE, include=TRUE}
-View(bos_permits)
+View(bos_rents)
 ```
 
 
 ## Examining Variables of Interest
 
-Before we begin making tables, it's good practice to look at just the variables of interest to make sure nothing is awry.
+Before we begin making tables, it's good practice to look at just the variables of interest to make sure nothing is awry. 
 
-Use the `unique` function from base R to examine the unique Occupancy Types and Permit Descriptions present in our data:
+Use the `unique` function from base R to examine the unique neighborhoods and number of bedrooms present in our rent data:
 
 ```{r, include=TRUE}
-unique(bos_permits$occupancytype)
-unique(bos_permits$description)
+unique(bos_rents$neighborhood)
+unique(bos_rents$bedrooms)
 ```
 
-Our output shows the different building occupancy types represented in our subsetted permit data: "1-2FAM" indicates the number of residential units in each building, "Mixed" indicates mixed-use (residential+commercial) units, and "Multi" indicates buildings with 5+ units.
-
-Similarly, we see the different permit descriptions present in our dataset.
-
+This shows us a list of the neighborhoods in our rent price data, as well as the range in number of bedrooms for the homes and apartment units included in the dataset. 
 
 
 # Making tables and checking frequencies
 
-
-We can use the `cross tabulation` function `xtabs`to look at the number of permits by occupancy type. We will be using the xtable package again.
+How do these rental listings fall out by neighborhood? We can use the `cross tabulation` function `xtabs`to look at the number of observations (i.e. data points) by neighborhood. We will be using the xtable package again.
 
 ```{r, include=TRUE}
 library(xtable)
-xtabs(~occupancytype,data=bos_permits)
+xtabs(~neighborhood,data=bos_rents)
 ```
 
 
-We can also compare two variables against each other. Here we are disaggregating the number of permit types ("description") by occupancy type.
+We can also compare two variables against each other. Let's create a table that shows us how many observations we have by number of bedrooms and neighborhood. 
 
 ```{r,echo=TRUE}
-xtabs(~description+occupancytype,bos_permits)
+xtabs(~bedrooms+neighborhood, data=bos_rents)
 ```
 
+# Frequencies and Distributions
 
-Now, let's examine the frequency of our data.
+Next, let's examine the frequency of rent prices by displaying a histogram that shows the absolute frequency (number of observations) on the y-axis and rent on the x-axis. 
 
 Here, we're using the `dplyr` command `pull` to specify which column variable we want R to summarize for us. 
 
 ```{r, echo=TRUE}
 
-bos_permits |>
-  dplyr::pull(total_fees) |>
-  hist(breaks = 10)
+bos_rents|>
+  dplyr::pull(rent) |>
+  hist(breaks = 50)
 
 ```
 
+_How would you describe the skew of our data based on this histogram?_
+
+To look at a slightly less skewed subset of the data, let's filter the city-wide dataset to just rental units in Chinatown and then display the histogram of rents in Chinatown.
+
+```{r}
+chinatown <- bos_rents |>
+  filter(bos_rents$neighborhood == "Chinatown")
+
+hist(chinatown$rent)
+```
 
 
 # Summary Statistics
 
-
-The Boston Permit data includes information on the amount of permit fees charged. We may want to understand the basic statistics of the `total_fees` variable.
+In this next section, we'll look more closely at the basic statistics of the `rent` variable. We'll begin with overall summary statistics that describe the central tendencies of the data (mean, median). We'll then move on to descriptive statistics and plots that help us describe the dispersion, or difference, present in our dataset.
 
 The command `summary` provides us with the mean, median, 25th, and 75th quartiles, and minimum and maximum values:
 
 ```{r, echo=TRUE}
-summary(bos_permits$total_fees)
+summary(bos_rents$rent)
 ```
 
-## Mean and Median
+The summary function can be graphically represented in the box plot. Box plots are one way that we can visualize the spread of our data. 
 
 
-We can also look specifically at the mean and median of the total fees, as follows.
+```{r}
+boxplot(bos_rents$rent)
+```
+
+## Measures of Central Tendency: Mean and Median
+
+We can use R to calculate specific statistics, including the mean and median of rent, as follows.
 
 **Note**: The `na.rm` argument in the function `mean` tells R how to handle missing values in the variable we are examining. When we set `na.rm=TRUE`, R removes missing values from its calculation.
 
+We can use `dplyr` and `pull` to select the variable that we are analyzing: 
+
 ```{r, echo=TRUE}
-bos_permits |>
-  dplyr::pull(total_fees) |>
+bos_rents |>
+  dplyr::pull(rent) |>
   mean(na.rm=TRUE) 
 ```
 
-Another way that we can do this is to use specific commands for `mean` and `median`. :
+Another way that we can do this is to use specific commands for `mean` and `median` :
 
 ```{r, echo=TRUE}
-mean(bos_permits$total_fees, na.rm=TRUE)
+mean(bos_rents$rent, na.rm=TRUE)
 
-median(bos_permits$total_fees, na.rm=TRUE)
+median(bos_rents$rent, na.rm=TRUE)
 ```
 
 
 ## Quantiles
 
-Let's say we wanted to know the amount of the fee at the 20th, 40th, 60th, and 80th percentile (the quintiles), to do so, we'd use the quantile function.
+Let's say we wanted to know the rent amount at the 20th, 40th, 60th, and 80th percentile (the quintiles), to do so, we'd use the quantile function. 
 
 ```{r, echo=TRUE}
-quantile(bos_permits$total_fees,probs=c(.2,.4,.6,.8))
+quantile(bos_rents$rent, probs=c(.2,.4,.6,.8))
 ```
+These percentiles tell us what percentage of our data falls below each cut off point (e.g. the 20 percentile rent price indicates that 20% of rents in our data set are less than this value).
+
 
 ## Quantiles with Nested Function
 
 You can combine the $\mathtt{seq}$ function that we saw in recitation 1 to make this a little easier:
 
 ```{r, echo=TRUE}
-quantile(bos_permits$total_fees,probs=seq(.2,.8,by=.2))
+quantile(bos_rents$rent,probs=seq(.2,.8,by=.1))
 ```
 
 
-## Box plots
+## Measures of Dispersion
 
-Box plots are one way that we can visualize the spread of our data. Box plots allow us to see much more than your usual $\mathtt{summary()}$ function. 
+Measures of dispersion include: range, variance, and standard deviation. These statistics describe the spread or variability in the data. For data that are closely grouped together, these measures will have smaller values. Conversely, for data that are very spread out (or highly dispersed), these values will be greater.
 
+We'll look at two such measures: range and standard deviation.
 
-The code below shows you how to make a single box plot for the data on permit fees.
+## Range
 
-```{r, echo=TRUE, eval=TRUE}
-boxplot(bos_permits$total_fees,
-        main = "How much were building permit fees?",
-        ylab = "Fee in dollars")
+The range is the difference between the largest value and the smallest value present in your data. The base R function `range` will return the minimum and maximum of a vector in your dataset. 
+
+To calculate the range directly in R, we can write an expression using the `min` and `max` commands in R, which identify the minimum and maximum values for a vector, respectively.
+
+```{r}
+range(bos_rents$rent) 
+
+max(bos_rents$rent) - min(bos_rents$rent)
+```
+## Standard Deviation
+
+Standard deviation is a measure of how data vary with respect to the mean. 
+
+R can calculate the standard deviation in your sample using the function `sd()`:
+
+```{r}
+sd(bos_rents$rent)
 ```
 
-Now, we'll create a box plot with the fees broken out by type of building.
-
-- *Note*: Remember that the order to put the data in matter a lot. The data on the left of the tilde will be on the y axis. This is usually reserved for your dependent variable.
-
-```{r,fig.height=5.5,eval=TRUE}
-boxplot(bos_permits$total_fees~bos_permits$occupancytype,
-        main = "How much were building permit fees,by building type?",
-        xlab = "Occupancy Type",
-        ylab = "Fee in dollars")
-```
 That's all for today!
