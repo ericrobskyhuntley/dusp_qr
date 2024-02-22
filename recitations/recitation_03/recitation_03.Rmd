@@ -88,7 +88,7 @@ xtabs(~bedrooms+neighborhood, data=bos_rents)
 
 Next, let's examine the frequency of rent prices by displaying a histogram that shows the absolute frequency (number of observations) on the y-axis and rent on the x-axis. 
 
-Here, we're using the `dplyr` command `pull` to specify which column variable we want R to summarize for us. 
+Here, we're using the `pull()` function (from the `tidyverse`) to specify which column variable we want R to summarize for us. 
 
 ```{r, echo=TRUE}
 
