@@ -1,6 +1,6 @@
 ---
 title: "Cross Tabulations & Summary Statistics"
-author: "Chenab Navalkha"
+author: "Chenab Navalkha and Eric Robsky Huntley"
 date: "Spring 2024"
 output: pdf_document
 thanks: This is a substantial extension and rewrite of material originally developed
@@ -44,7 +44,7 @@ We've provided this data as a CSV. Read this CSV into an `R` dataframe using _ei
 
 ```{r, eval=TRUE, include=TRUE}
 library(tidyverse)
-bos_rents<-read_csv("boston_rents.csv")
+bos_rents <- read_csv("data/boston_rents.csv")
 ```
 
 As a first step, examine your dataframe. To do this, you can either click on the dataframe name in the `RStudio` 'environment' pane, or run `View(df)`). 
@@ -93,38 +93,75 @@ Here, we're using the `dplyr` command `pull` to specify which column variable we
 ```{r, echo=TRUE}
 
 bos_rents|>
-  dplyr::pull(rent) |>
+  pull(rent) |>
   hist(breaks = 50)
 
 ```
 
 _How would you describe the skew of our data based on this histogram?_
 
-To look at a slightly less skewed subset of the data, let's filter the city-wide dataset to just rental units in Chinatown and then display the histogram of rents in Chinatown.
+To look at a slightly less skewed subset of the data, let's filter the city-wide dataset to just 1 bedroom rental units and then display the histogram of asking rent.
 
 ```{r}
-chinatown <- bos_rents |>
-  filter(bos_rents$neighborhood == "Chinatown")
+br_1 <- bos_rents |>
+  filter(bos_rents$bedrooms == 1)
 
-hist(chinatown$rent)
+hist(br_1$rent)
 ```
-
 
 # Summary Statistics
 
 In this next section, we'll look more closely at the basic statistics of the `rent` variable. We'll begin with overall summary statistics that describe the central tendencies of the data (mean, median). We'll then move on to descriptive statistics and plots that help us describe the dispersion, or difference, present in our dataset.
 
-The command `summary` provides us with the mean, median, 25th, and 75th quartiles, and minimum and maximum values:
+The command `summary` provides us with the mean, median, 25th, and 75th quartiles, and minimum and maximum values...
 
 ```{r, echo=TRUE}
 summary(bos_rents$rent)
 ```
 
-The summary function can be graphically represented in the box plot. Box plots are one way that we can visualize the spread of our data. 
+...and for one-bedrooms in particular...
+
+```{r, echo = TRUE}
+summary(br_1$rent)
+```
+
+Finally, we can get narrow the range even more by looking at a particular neighborhood. Let's examine asking rents for 1-bedroom units in Chinatown...
+
+```{r, echo = TRUE}
+br_1_chinatown <- br_1 |>
+  filter(neighborhood == "Chinatown")
+
+summary(br_1_chinatown$rent)
+
+# Note that we could do all of this, starting with our 
+# entire dataset in one fell swoop like this...
+# br_1_chinatown <- bos_rents |>
+#   filter(neighborhood == "Chinatown" & bedrooms == 1)
+
+# We could even do the variable selection in our pipeline
+# and pass it directly to the summary function!
+# bos_rents |>
+#   filter(neighborhood == "Chinatown" & bedrooms == 1) |>
+#   pull(rent) |>
+#   summary()
+```
+
+The summary function can be graphically represented in the box plot. Box plots are one way that we can visualize the spread of our data.  Recall that the line in the center of the rectangle is the median, the rectange is the 'interquartile range'---i.e., the top is the 75th percentile and the bottom is the 25th---and the whiskers... Well, they're actually doing something a little fancy by default and not indicating the minimum to maximum, but rather trying to indicate a representative range while the plot still includes the outliers as points.
 
 
 ```{r}
-boxplot(bos_rents$rent)
+boxplot(br_1$rent)
+```
+We can use one additional functionality to analyze the rent for each bedroom count. Let's pass in a function! The term on the left side (`bos_rents$rent`) is the values and the term on the right side (`bos_rents$bedrooms`) is a grouping variable. Each unique value of the latter will receive its own boxplot!
+
+```{r}
+boxplot(bos_rents$rent ~ bos_rents$bedrooms)
+```
+
+Finally, let's look at the cost of one-bedroom units by neighborhood. (We include the `las = 2` parameter, which simply rotates the labels vertically so that all will fit.
+
+```{r}
+boxplot(br_1$rent ~ br_1$neighborhood, las = 2)
 ```
 
 ## Measures of Central Tendency: Mean and Median
@@ -133,11 +170,11 @@ We can use R to calculate specific statistics, including the mean and median of 
 
 **Note**: The `na.rm` argument in the function `mean` tells R how to handle missing values in the variable we are examining. When we set `na.rm=TRUE`, R removes missing values from its calculation.
 
-We can use `dplyr` and `pull` to select the variable that we are analyzing: 
+We can use ``pull` to select the variable that we are analyzing: 
 
 ```{r, echo=TRUE}
 bos_rents |>
-  dplyr::pull(rent) |>
+  pull(rent) |>
   mean(na.rm=TRUE) 
 ```
 
@@ -188,12 +225,14 @@ max(bos_rents$rent) - min(bos_rents$rent)
 ```
 ## Standard Deviation
 
-Standard deviation is a measure of how data vary with respect to the mean. 
+Standard deviation is a measure of how data vary with respect to the mean. Let's do this for our one-bedroom subset.
 
-R can calculate the standard deviation in your sample using the function `sd()`:
+R can calculate the standard deviation in your sample using the function `sd()`.
 
 ```{r}
-sd(bos_rents$rent)
+sd(br_1$rent)
 ```
+
+This is in units of the variable, so the standard deviation for a 1-bedroom apartment in Boston is \$`r sd(br_1$rent)`.
 
 That's all for today!
