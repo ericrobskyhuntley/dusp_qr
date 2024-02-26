@@ -53,7 +53,7 @@ Many municipalities implementing smart-growth principles do so by designated spe
 ```{r eval=FALSE}
 df <- df |>
   mutate(
-    case_when(
+    incbonus = case_when(
       incbonus == 0 ~ "No bonus",
       incbonus == 1 ~ "Optional",
       incbonus == 2 ~ "Guaranteed",
