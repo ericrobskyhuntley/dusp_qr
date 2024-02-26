@@ -9,20 +9,20 @@ output:
 
 # Getting to Know Your Data
 
-Examine this table that shows the Per Capita Income in the 8 most populated neighborhoods in Boston. Create (with your hands! Pens! Pencils! Smeared applesauce! Whatever!) a rough sketch of a box plot that shows the minimum, maximum, first and third quartiles, and median value.
+```{r echo=FALSE, include=FALSE}
+df <- readr::read_csv("boston_mhi.csv")
+rows <- 9
+```
 
-Neighborhood | Per Capita Income
----|---
-Dorchester | \$29,767
-Brighton | \$41,261
-Roxbury | \$20,978
-East Boston | \$31,473
-Jamaica Plain | \$51,655
-Hyde Park | \$32,744
-South Boston | \$64,745
-West Roxbury | \$47,836
+Examine this table that shows the median household income (MHI) in the `r rows` most populated neighborhoods in Boston. Create (with your hands! Pens! Pencils! Smeared applesauce! Whatever!) a rough sketch of a box plot that shows the minimum, maximum, first and third quartiles, and median value.
 
-_Source: U.S. Census Bureau, 2015-2019 American Community Survey, BPDA Research Division Analysis_
+```{r, echo=FALSE, results="asis"}
+ df |>
+  dplyr::slice_max(Households, n = rows) |>
+  knitr::kable("latex")
+```
+
+Source: Boston Planning & Development Authority. 2024. _[Boston in Context: Neighborhoods](https://www.bostonplans.org/getattachment/528be767-2cb3-4685-9a66-206cede8773b)_. Based on 2018-2022 American Community Survey.
 
 # MassZoning in R
 
@@ -53,7 +53,7 @@ Many municipalities implementing smart-growth principles do so by designated spe
 ```{r eval=FALSE}
 df <- df |>
   mutate(
-    case_when(
+    incbonus = case_when(
       incbonus == 0 ~ "No bonus",
       incbonus == 1 ~ "Optional",
       incbonus == 2 ~ "Guaranteed",
