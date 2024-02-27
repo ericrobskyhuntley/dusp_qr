@@ -1,0 +1,84 @@
+---
+title: "R Markdown Template"
+author: "Chenab Navalkha and Eric Robsky Huntley"
+date: "2024-02-22"
+output: word_document
+---
+
+The block at the top of the document is called a YAML Header---note that it includes title, author, and date for your file, as well as the type of file output you are specifying. For example, if you wanted to export a Word document instead of an HTML file (which is a webpage), you could simply specify `output: word_document`. There are many other parameters you can include in your header, but these are some of the basics.
+
+If you're interested in seeing how the teaching team is using Rmarkdown, check out the class materials on Github here: <https://github.com/ericrobskyhuntley/dusp_qr/>
+
+# What is R Markdown?
+
+R Markdown has a few more features than your typical `.R` script (the file extension for RMarkdwon files is `.Rmd`). RMarkdown thinks in terms of code 'chunks'. Note that each chunk below is opened and closed with three 'tick marks' (\`\`\`). The first one has `{r}` enclosed in curly braces immediately following the tick marks.
+
+You can run each chunk separately, or use the little arrows in the top right hand corner of each chunk to run all code above or below. One way to structure your R Markdown document is to create separate chunks for standardized parts of your workflow.
+
+# What is markdown?
+
+All of the text surrounding the R blocks is written using a syntax called `markdown`. This provides a simple way to style your text. If I wanted to bold some text, I'd place two `*`s around it **like this**. If I want it italicited, I'd place a single `*` on either side *like this*. Lists can be constructed using a range of symbols (`-`, `+`...) I tend to use plus signs, but pick your poison.
+
++ List item 1.
++ List item 2.
+    + Nested list item 1, which is created by placing four spaces in front of the symbol.
+    
+If you're interested in learning markdown, we've posted a tutorial to the Canvas page.
+
+# Let's proeed!
+
+For example, we can start by loading in the packages we typically use:
+
+```{r}
+library(tidyverse)
+library(xtable)
+```
+
+# Working Folder
+
+When you're working in an Rmd document, by default it treats the folder that the RMarkdown file is in as the working directory. This simplifies your life, for obvious reasons!
+
+And then we can get going with the rest of our code. In the below block, `cars_summary` is treated as a label for the code block.
+
+```{r cars_summary}
+summary(cars) # cars is a dataset that is built in to R
+```
+
+# Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure_lot, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. This is great for writing e.g., reports where you want to include the results, but not the code that generated those results.
+
+## `knitr` options
+
+You can customize which blocks of code and which output you want to include in your output by customizing the `knitr` options in your chunk header. Setting `include = TRUE` indicates that you want to include the results and code...
+
+```{r, include = TRUE}
+plot(pressure)
+```
+
+...while setting `include = FALSE` excludes both the code and the results from the final document. Importantly, in both cases, __the code will still run__.
+
+```{r, include = FALSE}
+plot(pressure)
+```
+
+Setting `echo = FALSE` will keep the code from appearing, though results will still be printed.
+
+```{r, echo = FALSE}
+plot(pressure)
+```
+
+If you want to include code that R does not run, simply use `eval = FALSE`.
+
+```{r, eval = FALSE}
+# This code does not run!
+plot(pressure)
+```
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
