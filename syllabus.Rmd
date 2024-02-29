@@ -110,7 +110,9 @@ In recent years, `R` programming has changed substantially with the introduction
 
 ## Attendance (20%)
 
-As in life, much of your success in this class depends on showing up. We will be taking attendance in lectures and labs. (Students are required to go to one lab per week). That said, we recognize that there may be a variety of reasons for you to miss a lecture or lab session. We will be streaming and recording lectures for those who occasionally cannot come to class due to illness or another excused absence. Watching a class recording will only count as a positive attendance for that class if you have communicated with us about it. 
+As in life, much of your success in this class depends on showing up. We will be taking attendance in lectures and labs. (Students are required to go to one lab per week). That said, we recognize that there may be a variety of reasons for you to miss a lecture or lab session. We will be recording lectures for those who occasionally cannot come to class due to illness or another excused absence. Watching a class recording will only count as a positive attendance for that class if you have communicated with us about it. 
+
+**Additionally, you will be permitted to miss one lecture and one recitation with no reason given.**
 
 Class recordings will only be shared to students and teaching staff in this class and will be deleted once the semester is over. For any students who do not wish to appear in the class recordings, please come talk with us and we can help you find a seat outside of the view of the video.
 

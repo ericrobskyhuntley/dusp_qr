@@ -1,0 +1,56 @@
+---
+title: "Probability and Dispersion"
+subtitle: "Exercise 3"
+thanks: "This exercise is written by Justin Steil, with substantial revisions by Eric Robsky Huntley."
+output: 
+  pdf_document: 
+  template: '../templates/syllabus.latex'
+---
+
+# Part 1: Probability  
+
+A recent survey of the Muswell Hill neighborhood north of London revealed the following:
+  
++ Total Units: the neighborhood has 1,200 apartments;
++ Parking: 25% of the apartments have no dedicated parking spaces;
++ Size: one-sixth of the apartments are one-bedroom (1BR), one-half are two-bedroom (2BR), and one-third are three-bedroom (3BR);
++ Access: 10% of the apartments are wheelchair-accessible;
++ Pets: 240 of the apartments allow pets.
+
+Please answer the following questions based on your knowledge of probability! **Assume that all of these events are independent.**
+
+a. How many 1BR apartments with dedicated parking would you expect in this neighborhood?
+
+b. What percentage of the wheelchair-accessible apartments with parking that allow pets are 3BR?
+
+c. What percentage of the 3BR apartments with parking that allow pets are wheelchair-accessible?
+
+d. A “limited-mobility-friendly" (LMF) apartment is defined as an apartment that has either dedicated parking or is wheelchair-accessible, or both. How many LMF apartments are there in the neighborhood that are 2BR or larger?
+
+## Part 2: Standard Deviation
+
+```{r echo=FALSE, include=FALSE}
+df <- readr::read_csv("boston_mhi.csv")
+rows <- 10
+```
+
+Examine this table that shows the Median Household Income in the `r rows` most populated neighborhoods in Boston. Manually calculate the mean, median, and standard deviation of this sample. Please show the steps.
+
+```{r, echo=FALSE, results="asis"}
+ df |>
+  dplyr::slice_max(Households, n = rows) |>
+  knitr::kable("latex")
+```
+
+Source: Boston Planning & Development Authority. 2024. _[Boston in Context: Neighborhoods](https://www.bostonplans.org/getattachment/528be767-2cb3-4685-9a66-206cede8773b)_. Based on 2018-2022 American Community Survey.
+
+# Part 3: Getting to Know Your Data
+
+In this assignment, we will continue to Jeff Kaufman's Boston rents database, which we've modified to include the Boston neighborhood in which the listed units fall.
+
+1. Produce five-number summaries of asking rents for 2-bedroom units in Dorchester, Roxbury, and the South End.
+2. What percentage of units in Chinatown have rents that fall below the U.S. Department of Housing and Urban Development's 2024 fair market rent for 1-bedrooms in Boston? ($2,377)
+3. What are the variance and standard deviation of rents for 1-bedroom units in Allston?
+4. How many 1-bedroom units in Jamaica Plain are more than two standard deviations above the mean asking rent for 1-bedrooms in that neighborhood? (Hint: calculate the value of two standard deviations above the mean first, then use it to `filter()`!)
+5. Produce a boxplot that depicts summaries of rent by bedroom count in Jamaica Plain.
+

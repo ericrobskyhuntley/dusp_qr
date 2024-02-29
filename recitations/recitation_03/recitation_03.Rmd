@@ -104,7 +104,7 @@ To look at a slightly less skewed subset of the data, let's filter the city-wide
 
 ```{r}
 br_1 <- bos_rents |>
-  filter(bos_rents$bedrooms == 1)
+  filter(bedrooms == 1)
 
 hist(br_1$rent)
 ```
