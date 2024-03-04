@@ -1,0 +1,262 @@
+---
+title: "Binomial Probabilities and Normal Distributions"
+author: "Nishan Zewge-Abubaker and Eric Robsky Huntley"
+date: "Spring 2024"
+output: pdf_document
+thanks: This is a substantial extension and rewrite of material originally developed
+  by Sebastian Sandoval Olascoaga and subsequently revised by Ben Preis and Gokul
+  Sampath.
+subtitle: Recitation 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  include=TRUE,
+  cache = TRUE,
+  hold=TRUE,
+  warning = FALSE,
+  message = FALSE,
+  size = 'huge'
+  )
+
+
+```
+
+*NOTE: as you get more familiar with using R, we are going to add a few learning checks in this recitation! Wherever the words "INSERT CODE" are included in a partial line of code, try completing it yourself and seeing what happens. Anywhere else we add the words *Learning Check*, show your Teaching Assistant your executed code!*
+
+# Set Working Directory
+
+
+To start, we'll set the Working Directory for this week's recitation along the same lines as last week. Reminder to download the recitation folder (with its data) to the appropriate place on your computer! 
+
+Like prior recitations, use the `setwd()` function to specify the location of your working directory.
+
+```{r, eval=FALSE, include=TRUE}
+
+setwd("/Users/nishanzewge-abubaker/Documents/GitHub/dusp_qr/recitations/recitation_04")
+```
+
+
+# Reading Data
+
+For this recitation we are going to use 2013-2015 data on resident water bills from the wards in the City of Bangalore. This data was compiled by the Bangalore Water Supply and Sewarage Board (BWSSB), that is looking to increase their total collected revenues.
+
+
+We've provided this data as a CSV. Read this CSV into an `R` dataframe using _either_ the `read.csv()` function from base `R` or the `read_csv()` function from the tidyverse's `readr` library. If you use `read_csv()`, remember to load the `tidyverse` package. 
+
+
+```{r, eval=FALSE, include=TRUE}
+library(tidyverse)
+
+blore_water <- [INSERT CODE]
+
+
+```
+
+
+```{r, eval=TRUE, include=FALSE}
+library(tidyverse)
+#Reading in data for purposes of rmd file
+blore_water <- read_csv("bangalore_water_2013_2015.csv")
+
+```
+
+As a first step, examine your dataframe. To do this, you can either click on the dataframe name in the `RStudio` 'environment' pane, or run `View(df)`). Last week we used the `unique()` function to examine the number of unique Boston neighborhood observations in our dataset. This week we can try out another tip for examining your dataset: `str()` will tell you the number of observations (rows) and variables (columns) along with the class (type of variable), and a preview of the first few observations per column.
+
+```{r, eval=TRUE, include=TRUE, results='hide'}
+View(blore_water)
+str(blore_water)
+```
+
+But remember you can also use:
+  - `dim()` to get both the number of rows and columns alone
+  - `nrow()` to get the number of rows
+  - `ncol()` to get the number of columns
+
+We'll also create a new column (`resbill_2015_per1000`) of the 2015 resident bills for 1000 persons in a given ward, from the resident bills column (`resident_bills`) and ward population (`pop2011`). This tries to account for differences in population sizes between wards and make them more comparable. 
+
+```{r, include=TRUE}
+
+blore_water <- blore_water|>
+  dplyr::mutate("resbill_2015_per1000"=1000*resident_bill_2015/pop2011)
+
+#Doing the same for the 2013 resident bills 
+blore_water<-blore_water|>
+  mutate(resbill_2013_per1000=1000*resident_bill_2013/pop2011)
+
+```
+
+
+# Dealing with Binomial Distributions
+Let's say the City of Bangalore ran a program 2013-2022 that offered an annual grant to all wards to improve their revenue collection practices.Since (for the purposes of this example) urban governance is highly decentralized in Bangalore wards, wards who were offered the grant could choose whether or not to take it. There are two outcomes here in a given year: wards who take the grant, and wards who do not. The probability that a ward accepts the grant in a year is 65%, and all probabilities are independent (meaning, a ward taking the grant in one year doesn't change the probabilities of other wards doing the same, or in future years). 
+
+Since there are only *two discrete outcomes* (binary) possible, the probabilities of each outcome lie in what we call a binomial distribution. Plotting these values on a distribution function looks like this:
+
+```{r, echo=FALSE, fig.dim = c(3, 3)}
+plot(c(0,1),c(0.35,0.65),type= "h",
+     xaxt="n",     
+     ylim=c(0,1),
+     xlab="Ward's Probability of Taking Grant",
+     ylab="Outcome")|>
+axis(side=1, at=c(0,1), labels=c("Does not Take", "Takes"))
+
+```
+
+A notation reminder:  
+*k* = the number of event outcomes (or years 2013-2022 the pilot is running)  
+*n* = the number of trials (or total number of wards that decide on taking the grant)   
+*p* = probability of success on a given trial (probability for a single ward in a single year accepting the grant)
+
+## R Commands Dealing with Distributions 
+We can use the `binom` functions to calculate probabilities including the probability density function, cumulative density function, and quantile functions. 
+
+* `dbinom(k,n,p)` is the  PDF, telling you the probability that you get *k* outcomes, out of *n* trials, when the probability of getting *k* is equal to *p*
+* `pbinom(k,n,p)` is the CDF, telling you the probability that you get *k* **or fewer** outcomes, out of *n* trials, when the prob(*k*)=*p*
+* `qbinom(q,n,p)` is the quantile function, saying, given a percentile *q*, out of *n* trials, what is the expected number of events, given the probability of getting *k* is equal to *p*
+
+If we wanted to randomly simulate all ten years of this program, here's how we do that:
+```{r}
+
+blore_grants<- rbinom(10,197,0.67)
+
+
+```
+
+## Try it Out: Distribution Function Examples 
+As we saw above, what's the probability that in a given year only 130 wards accept this grant?
+```{r, include=TRUE}
+dbinom(130,197,.65)
+```
+
+Pretty small! Remember, this is the probability of getting *exactly* 100 wards. 
+
+**LEARNING CHECK**: What's the probability that 130 or fewer wards accept this grant?
+```{r,eval=FALSE, include=TRUE}
+[INSERT code]
+```
+
+```{r, include=FALSE}
+#Answer
+ pbinom(130,197,0.65)
+```
+
+
+# Normal Distributions
+
+Now that we've looked at probabilities for *discrete* values, let's turn to *continuous* values that are normally distributed. Calculating probabilities with continuous values tells us the probability of a value less than or equal to our probability of interest.This is called a *cumulative distribution function* (CDF). If you would like the probability at that point or greater, you must take the complement (1-P).
+
+Let's look at the distribution of average water bills by ward in Bangalore for the year 2015. 
+
+This is most easily done by *standardizing* the distribution - meaning we convert the values to z-scores and center the mean at 0. 
+
+First, let's look at some summary statistics for `resbill_2015_per1000`:
+
+```{r, include=TRUE, fig.dim = c(5, 5)}
+#Original Distribution
+summary(blore_water$resbill_2015_per1000)
+sd(blore_water$resbill_2015_per1000)
+plot(density(blore_water$resbill_2015_per1000))
+```
+
+This helps us visually confirm via a kernel density plot that the distribution has some right-skewness, but may be approximately normal enough to try calculating some probability densities. 
+
+## Calculating Z scores in R 
+
+
+Next, we will convert each value to its standardized z-score. Z-scores tell us about a particular value of a distribution in terms of the distribution itself (ie. grading on a curve). We can do this with continuous variables specifically, and that also allows us to compare two scores that are from *different* normal distributions. (ie. comparing SAT scores across years). Z-scores also make 0 meaningful - zero becomes the mean. Centering our predictor may aid in visualizing the distribution.
+
+To accomplish this, we can add another column in `blore_water` with the `mutate()` function, and use `scale()` to transform each value into its' respective z-score.
+
+
+```{r, include=TRUE, fig.dim = c(5, 5)}
+#Centering the Distribution's Mean around Zero
+blore_water <- blore_water|>
+  dplyr::mutate(resident_bill_2015z=
+  scale(blore_water$resbill_2015_per1000, center = TRUE, scale = TRUE))
+
+#Confirming scaling using summary statistics and kernel density plot
+summary(blore_water$resident_bill_2015z)
+sd(blore_water$resident_bill_2015z)
+
+plot(density(blore_water$resident_bill_2015z),
+     xlab="Centered 2015 Resident Bills",
+    main="abc")
+#Adding a line right at the mean
+abline(v=mean(blore_water$resident_bill_2015z),col="blue")
+```
+
+You'll notice that using `summary()` confirms the mean is at 0, and the standard deviation is 1. Note that standardizing does *not* change the shape of the distribution. This is now a probability distribution density curve!
+
+
+## Using Z-Scores to Estimate Probabilities of Expected Values
+
+Now, let's calculate the probability of a ward getting a specific water bill size using z-scores. 
+
+We always need to get the mean and standard deviation of our population weighted resident bills with non-standardized values. Let's calculate the z-scores for water bills 1) 6.5 Rupees per 1000 persons or less, and 2) 12 Rupees per 1000 persons or less
+```{r, echo=TRUE, include=TRUE}
+#Calculating the mean and standard deviation
+mn_bill2015<-mean(blore_water$resbill_2015_per1000)
+sd_bill2015<-sd(blore_water$resbill_2015_per1000)
+Z_6Rs<-(6.5-mn_bill2015)/sd_bill2015
+Z_12Rs<-(12-mn_bill2015)/sd_bill2015
+
+#getting probability of each 
+P_6Rs<-pnorm(Z_6Rs)
+P_12Rs<-pnorm(Z_12Rs)
+
+```
+What the CDF is giving you here is a p-value. A p-value is the probability of obtaining a particular observation for a variable, given an assumption about the mean and standard deviation of that distribution.
+
+*Learning Check*: What's the probability of getting a water bill between 12 and 6.5 Rupees per 1000 persons?
+```{r, echo=TRUE, include=FALSE}
+P_12Rs-P_6Rs
+
+```
+
+# Dealing with Skewness by Transforming the Distribution Shape
+
+In scenarios with extremely skewed data, it may be advisable to transform the data and it's distribution in order for it to be more interpretable. Let's try to visualize the distribution of `resident_bill_2013` to see how far from normal it might be. 
+
+```{r, include=TRUE}
+
+hist(blore_water$resident_bill_2013, breaks=15)
+boxplot(blore_water$resident_bill_2013)
+```
+
+When we see data with a long right-tail like this, we think it might be a good idea to take a log distribution. This takes the `log` of every observation to create a relatively more normally distributed-looking spread of data. 
+
+
+```{r,fig.height=4}
+
+#Preparing distribution for log-transforming
+#values equal to 0 cannot be log-transformed! so we need to filter them out 
+blore_water<-blore_water|>
+  filter(resbill_2013_per1000>0)
+
+#Adding a log-transform column for 2013 resident bills
+blore_water<-mutate(blore_water,logresbill_2013=log(resbill_2013_per1000))
+view(blore_water)
+```
+
+Now let's compare the function plots for the log-transfored and raw distributions. 
+```{r, fig.height=4}
+#Producing Kernel Density Plot of Log-Transformed Column
+par(mfrow=c(1,2))
+plot(density(blore_water$logresbill_2013), 
+main = "Log of 2013 Resident Water Bills by Ward")
+
+
+#Overlaying density of the normal distribution
+curve(dnorm(x, mean(log(blore_water$resbill_2013_per1000)),
+sd(log(blore_water$resbill_2013_per1000))), add = TRUE, col = "blue")
+```
+```{r, fig.height=4}
+par(mfrow=c(1,2))
+plot(density(blore_water$resbill_2013_per1000), 
+main = "Raw 2013 Resident Water Bills by Ward")
+
+#Overlaying density of the normal distribution
+curve(dnorm(x, mean(blore_water$resbill_2013_per1000),
+sd(blore_water$resbill_2013_per1000)), add = TRUE, col = "red")
+```

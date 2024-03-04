@@ -17,7 +17,7 @@ You can run each chunk separately, or use the little arrows in the top right han
 
 # What is markdown?
 
-All of the text surrounding the R blocks is written using a syntax called `markdown`. This provides a simple way to style your text. If I wanted to bold some text, I'd place two `*`s around it **like this**. If I want it italicited, I'd place a single `*` on either side *like this*. Lists can be constructed using a range of symbols (`-`, `+`...) I tend to use plus signs, but pick your poison.
+All of the text surrounding the R blocks is written using a syntax called `markdown`. This provides a simple way to style your text. If I wanted to bold some text, I'd place two `*`s around it **like this**. If I want it italicized, I'd place a single `*` on either side *like this*. Lists can be constructed using a range of symbols (`-`, `+`...) I tend to use plus signs, but pick your poison.
 
 + List item 1.
 + List item 2.

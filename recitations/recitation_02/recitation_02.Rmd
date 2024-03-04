@@ -3,10 +3,10 @@ title: "Introduction to R"
 author: "Eric Robsky Huntley"
 date: "Spring 2024"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     template: ../../templates/syllabus.latex
+  html_document:
+    df_print: paged
 subtitle: Recitation 2
 thanks: This is a substantial extension and rewrite of material originally developed
   by Sebastian Sandoval Olascoaga and subsequently revised by Ben Preis.
@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   size = 'huge'
   )
+
+
 ```
 
 # Where is R? (The Working Directory)
