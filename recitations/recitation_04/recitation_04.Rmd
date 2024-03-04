@@ -240,7 +240,7 @@ view(blore_water)
 ```
 
 Now let's compare the function plots for the log-transfored and raw distributions. 
-```{r, fig.height=4}
+```{r, fig.dim=c(12,5)}
 #Producing Kernel Density Plot of Log-Transformed Column
 par(mfrow=c(1,2))
 plot(density(blore_water$logresbill_2013), 
@@ -248,10 +248,12 @@ main = "Log of 2013 Resident Water Bills by Ward")
 
 
 #Overlaying density of the normal distribution
+#got a little lost here!
 curve(dnorm(x, mean(log(blore_water$resbill_2013_per1000)),
 sd(log(blore_water$resbill_2013_per1000))), add = TRUE, col = "blue")
+legend(legend=c("density plot of 2013 bills","expected normal distribution of 2013 bills"))
 ```
-```{r, fig.height=4}
+```{r, fig.dim=c(12,5)}
 par(mfrow=c(1,2))
 plot(density(blore_water$resbill_2013_per1000), 
 main = "Raw 2013 Resident Water Bills by Ward")
