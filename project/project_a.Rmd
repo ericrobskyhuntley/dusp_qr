@@ -1,0 +1,80 @@
+---
+title: "Final Project"
+subtitle: "Part 1: Developing Your Research Questions and Describing Datasets"
+thanks: "This brief was written by Eric Robsky Huntley, building on the work of Justin Steil."
+output: 
+  pdf_document: 
+  template: '../templates/syllabus.latex'
+---
+
+# Introduction
+
+Given the short time we have together, this ‘final project’ is split over two weeks and is guided. In this first week, you’ll be developing research questions (framed as hypotheses), identifying data sources that include appropriate variables, and doing descriptive statistics to analyze the central tendency, dispersion, and distribution of the variables under consideration.
+
+# Groups
+
+This project will be completed in groups of 2-3 (most groups should be groups of 2, but we may have an odd number of students). Ideally, you should partner with people in your recitation, though this is not strictly necessary.
+
+# Deliverables
+
+For this first portion of the final project work, please submit a PDF with responses to the questions below and the results of the requisite analysis. This can come from RMarkdown or be assembled using other software (Google Docs, Word, etc.). 
+
+However you choose construct your document please include your code and the dataset you’re using! If you’re working in Rmarkdown, this can just be your `.Rmd` file and any data you’re working with. If you’re submitting a document you’ve constructed in some other way, please include an `.R` script.
+
+# Developing a Research Question
+
+With your partner(s), identify a topic of interest, and specify it in terms of a research question. Do so by responding to these prompts:
+
+1. What relationship are you interested in (i.e., what are your variables) and what is your expectation of that relationship? 
+2. This gives you your alternative/research hypothesis, which also gives you your null hypothesis! What is your null hypothesis and your alternative/research hypothesis?
+
+    _Recall that a null hypothesis is usually a statement of no effect, or no difference. For example, if you expect that you’ll see a positive relationship between income and housing prices, the null hypothesis is that there is no relationship between income and housing prices._
+    
+3. What would be the ideal unit of observation?	Individuals? Households? Cities? Counties? Trips? Etc.
+
+# Identifying Data
+
+After developing your research question, identify, at minimum, a single dataset to work with that gives you access to an estimate of the variables of interest for your research question. Then, answer the following questions, which are all key to understanding the limitations of a given data source. (You'll probably have to consult available metadata or documentation for some of these).
+
+1. Does the variable reflect a sample or a population?
+2. For each variable...
+
+    1. What is the unit of the sample or population? (E.g., people, households, trips.)
+    2. Is it aggregated? If so, over what unit? (E.g., cities, weeks, etc.)
+    3. When? (Over what time frame.)
+    4. Where? (Over what geography.)
+    5. How was the data collected?
+    6. What type is it? (I.e., decimal, integer, categorical, binary...)
+    7. Is it an index? If so, how was it constructed?
+    
+        _Recall that an index is a composite variable made up of multiple input variables. For example, the social vulnerability index (SVI)._
+    
+    8. Is it a direct measurement of the quality you're interested in, or is it simply related enough that you think it's a usable approximation (we call this a 'proxy').
+
+        _For example, if you’re interested in affluence, income is a common measure, but it does not capture ‘affluence’ exactly in that it does not measure wealth held in accounts, assets, family relationships, etc._
+    
+# Data Exploration
+
+Alongside the below results, provide commentary as necessary.
+
+1. Summary Statistics for Each Variable
+
+    _In other words, provide a five-number summary and a box plot for each._
+    
+2. Missingness
+
+    1. What proportion of observations are missing for each variable? (The quickest way to get this is `sum(is.na(df$column)) / nrow(df)`).
+    2. Do you have any concerns about the accuracy or completeness of the data?
+    
+3. Distributions
+
+    1. Create a histogram for each variable of interest.
+    
+        1. Comment on the distribution of each variable. (E.g., normality, skew, etc.)
+        2. Are there notable outliers? Are these relevant to your research question?
+        
+4. Relationships Among Variables
+
+    1. Create a scatter plot of the relationship between your variables of interest. (We'll go over this in the coming week!)
+    
+At the conclusion of this, you’ll have a better understanding of your data, which will be necessary as you carry out your analysis in the coming week!
