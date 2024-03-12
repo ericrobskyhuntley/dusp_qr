@@ -1,0 +1,180 @@
+---
+title: "Hypothesis Testing and Linear Regression"
+author: "Eric Robsky Huntley"
+date: "Spring 2024"
+output: pdf_document
+subtitle: "Recitation 5"
+---
+
+```{r include=FALSE}
+library(tidyverse)
+fema_claims <- read_csv("https://www.fema.gov/about/reports-and-data/openfema/FimaNfipClaims.csv")
+```
+
+```{r include = FALSE}
+fema_claims |>
+  dplyr::filter(
+    state == "LA", 
+    buildingDamageAmount > 0, 
+    netContentsPaymentAmount > 0, 
+    netBuildingPaymentAmount > 0
+    ) |>
+  dplyr::select(
+    occupancyType, yearOfLoss, netContentsPaymentAmount, 
+    netBuildingPaymentAmount, rentalPropertyIndicator, buildingDamageAmount
+    ) |>
+  readr::write_csv("fema_claims.csv")
+```
+
+
+We're going to use data from FEMA's (Flood Emergency Management Agency) National Flood Insurance Program (NFIP), specifically examining cases in Lousiana where there were payouts for both damage to building _structure_ and damange to building _contents_. Let's start by examining the dataset, by producing a histogram of claims paid out per year. Note that we're using a function to determine our breaks.
+
+```{r}
+claims <- read_csv("fema_claims.csv")
+```
+
+```{r}
+hist(
+  claims$yearOfLoss, 
+  # breaks = length(unique(fema_claims$yearOfLoss)),
+  breaks = seq(from = min(fema_claims$yearOfLoss), to = max(fema_claims$yearOfLoss), by = 1),
+  main = "Frequency of FEMA Claims by Year",
+  xlab = "Year of Loss",
+  ylab = "# of Claims"
+  )
+abline(v = 2005, col='red', lwd = 1)
+```
+
+
+We could also use R's `ggplot` package to produce this graph.
+
+``` {r}
+# Note that ggplot uses a slightly different syntax: you add geometries to the base plot.
+ggplot(claims, aes(x=yearOfLoss)) +
+  geom_histogram(binwidth = 1, color = "white", fill="gray") +
+  geom_vline(xintercept = 2005, color = "red") +
+  labs(title = "Frequency of FEMA Claims by Year") +
+  xlab("Year of Loss") +
+  ylab("# of Claims")
+
+```
+
+# t-test: Hypothesis Testing!
+
+Let's look at claims by year and test whether two years are statistically different for a particular occupancy type (single-family houses). To do this, we'll construct two samples from our dataframe of all claims filed in Louisiana.
+
++ $H_{0}$: The amount paid in dollars on single-family homes _is not_ different between 2000 and 2010.
++ $H_{1}$: The amount paid in dollars on single-family homes _is_ different between 2000 and 2010.
+
+```{r}
+claims_2000 <- claims |>
+  filter(yearOfLoss == 2000 & occupancyType == 1)
+
+claims_2010 <- claims |>
+  filter(yearOfLoss == 2010 & occupancyType == 1)
+
+t.test(claims_2000$netBuildingPaymentAmount, claims_2010$netBuildingPaymentAmount, alternative = "two.sided")
+```
+
+Let's interpret our results! We have a p-value that is well below the standard thresholds for statistical significance (usually 0.05), which indicates that it is statistically significant and we can reject the null hypothesis: in other words, we can't say that the payouts are different. We're also presented with a _confidence interval_. We can be 99% sure that the 'true mean' (which is to say, the mean for the two samples) is between these values.
+
+# ANOVA: Testing Means in Multiple Groups
+
+So far, we've been testing hypotheses about whether two sample means are different. But what if we're using categorical data? For example, we might be interested in the mean contents payout---which is to say payments to cover the costs of damage to things in the home---and the occupancy type.
+
+In this case we have a categorical variable and a quantitative variable, meaning that we want to use an ANOVA---or analysis of variance---table. The null hypothesis hear is that the means don't vary between groups (in other words, occupancy types). So, stated formally:
+
++ $H_{0}$: There _is no difference_ between the contents payment amount in different occupancy types.
++ $H_{1}$: There _is a difference_ between the contents payment amount for different occupancy types.
+
+```{r}
+claims_housing <- claims |>
+  filter(yearOfLoss == 2005 & occupancyType %in% c(1, 2, 3))
+
+anova <- aov(netContentsPaymentAmount ~ occupancyType, data = claims_housing)
+
+summary(anova)
+```
+
+Examine our p-value (the proabibility that this result would have been found under conditions of randomness). It's very small (well below standard 0.05 or 0.01 thresholds), which R is indicating using the `***` syntax. It's statistically significant, which means that we can reject our null hypothesis---there is difference between groups!
+
+# Chi-Square: Testing for Differences in Frequency Between Categorical Variables
+
+Finally, we may want to test whether two different categorical variables are independent. (In other words, that the distribution of one is not related to the distribution of the other.) This is where a Chi-Square, or $\chi^{2}$, test comes into play. Say we're interested in the relationship between rental properties and single- or multi-family housing in FEMA payments.
+
+Our hypotheses are these...
+
++ $H_{0}$: That single- and multi-family occupancy types are found in _equal proportions_ in rental and non-rental properties.
++ $H_{1}$: That single- and multi-family occupancy types are found in _different proportions_ in rental and non-rental properties.
+
+We'll run a chi-squared test to evaluate these hypotheses!
+
+```{r}
+claims_test <- claims |>
+  filter(occupancyType %in% c(1,2,3))
+
+table <- table(claims_test$occupancyType, claims_test$rentalPropertyIndicator)
+
+chisq.test(table)
+```
+
+We find a significant association between rental properties and occupancy type! So we can reject the null hypothesis.
+
+# Bivariate Regression
+
+Finally, let's test for association between two variables, namely the building payment and the amount paid by the NFIP. This will tell us how related the payment was to the damage, and we'll find that they're not perfectly correlated! Some payouts exceed the damage and some payouts are less than the damage. We'll start by producing a scatterplot, which will depict our two variables plotted against each other. This gives us a sense of their relationship.
+
+```{r}
+katrina_claims <- claims |>
+  ungroup() |>
+  filter(yearOfLoss == 2005)
+
+plot(katrina_claims$netBuildingPaymentAmount, katrina_claims$buildingDamageAmount)
+```
+
+Looks like we have some big outliers. Let's filter these out...
+
+```{r}
+katrina_claims_filt <- katrina_claims |>
+  filter(netBuildingPaymentAmount < 5e+05, buildingDamageAmount < 3.5e+06)
+
+plot(katrina_claims_filt$netBuildingPaymentAmount, katrina_claims_filt$buildingDamageAmount)
+```
+We see some interesting 'clumping' --- for example, there appears to be many payouts totaling $25,000! This indicates that there's probably a policy measure in place that sets that threshold. Note that we could also produce this graph using `ggplot`...
+
+```{r}
+ggplot(katrina_claims_filt, aes(x=netBuildingPaymentAmount, y=buildingDamageAmount)) +
+  geom_point(size=1, color = 'red') +
+  labs(title = "Building Damage vs. Payment") + 
+  xlab("Net Payment") +
+  ylab("Building Damage")
+```
+
+Because we see a lot of clumping around an obvious fit line (which is obscuring our view of the data), we could use the `geom_hex()` ggplot geometry to visualize density.
+
+```{r}
+ggplot(katrina_claims_filt, aes(x=netBuildingPaymentAmount, y=buildingDamageAmount)) +
+  # Use more bins for a more granular visualization!
+  geom_hex(bins = 50) +
+  labs(title = "Building Damage vs. Payment") + 
+  xlab("Net Payment") +
+  ylab("Building Damage")
+```
+
+We could then test the _correlation_ between the two variables using either a simple Pearson correlation coefficient or a bivariate regression. Let's start by finding the two Pearson correlation coefficient (often referred to as `r`). This returns a value between -1 and 1 which indicates whether there is a positive or negative correlation.
+
+```{r}
+cor(katrina_claims$netBuildingPaymentAmount, katrina_claims$buildingDamageAmount)
+```
+
+This tells us, essentially, that there is a positive relationship---larger building damage, larger payment amount. As a general rule of thumb, values greater than 0.5 indicate a strong correlation.
+
+But what if we want to be able to discuss this relationship in units? I.e., a unit change in one variable being associated with a unit change in the other? This is where __linear regression__ comes in. We Use the `lm()` function to run a _bivariate regression_ on our two variables.
+
+```{r}
+katrina_claims <- lm(netBuildingPaymentAmount ~ buildingDamageAmount, data = katrina_claims)
+
+summary(katrina_claims)
+```
+
+Interpreting our results: we have a positive coefficient estimate for building damage, though it is not 1. It's instead telling us that, in general, a 1 dollar change in building damage amount is associated with a $0.26 change in payment. We see a very small p-value, which indicates that the correlation is statistically significant. And we have an R-squared value that indicates that 30% of the variation in the payment is explained by variation in the building damage.
