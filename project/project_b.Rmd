@@ -1,0 +1,94 @@
+---
+title: "Final Project"
+subtitle: "Part 2: Hypothesis Testing and Relationships"
+thanks: "This brief was written by Eric Robsky Huntley."
+output: 
+  pdf_document: 
+  template: '../templates/syllabus.latex'
+---
+
+# Introduction
+
+In this second phase of the project, you will test your alternative hypothesis against your null hypothesis using appropriate tests with which you can answer your research questions (and make sense of these results). We also expect that you refine any plots that you produced in the first week of the project.
+
+# Groups
+
+This second portion of the project should be completed in the same groups of 2-3 as the first portion (most groups should be groups of 2, but we may have an odd number of students).
+
+# Deliverables
+
+For your final deliverable, please combine your work from this portion of the project and the previous into a single document. This should have the following sections:
+
+1. Introduction: About 100 words, stating your research questions and hypotheses and summarying their importance.
+2. Data: This should contain the descriptive work you did in part one, including plots and summary tables. It should also include a discussion of your data: how it was collected, where it's from, etc.
+3. Analysis: This should include the results of your analysis. (Outlined below.)
+4. Findings: A discussion of your findings. (Outlined below).
+
+**We expect that all plots will have labeled axes and include appropriate titles.** However you choose construct your document please include your code and the dataset you’re using! If you’re working in Rmarkdown, this can just be your `.Rmd` file and any data you’re working with. If you’re submitting a document you’ve constructed in some other way, please include an `.R` script.
+
+# Carrying Out your Analysis
+
+Now that you've identified two variables of interest, think about what they are! The most common cases would be that you have... 
+
+1. one categorical variable and one continuous variable, 
+2. two categorical variables, 
+3. or two continuous variables.
+
+This will have a great deal to do with the tests and analyses you can run!
+
+## If you have two categorical variables...
+
+You will most likely be carrying out a **Chi-Square ($\chi^{2}$) test**. Recall that this assesses the independence of the frequencies of the two variables---or, more simply, whether the occurance of one thing is the same or different when cross-tabulated with something else. (For example, whether the likelihood of an eviction filing is different between households receiving vouchers).
+
+Your **null hypothesis** ($H_{0}$) will be that that there is no difference between classes, and your **alternative hypothesis** ($H_{1}$) will be that there is a difference between classes.
+
+For a $\chi^{2}$ test to work properly, you'll need to have at least five instances of each combination of categorical variables. If this doesn't describe your situation, think about whether you could reasonably consolidate a couple of categories. (I.e., combine 2-3, 3-4, and 4+ unit apartment buildings into a "multi-family" category).
+
+You should report your results using a **standard results table for a $\chi^{2}$ test**. This should be accompanied by a **crosstab** depicting the number of instances of each category pair.
+
+## If you have one categorical variable and one continuous variable...
+
+### ANOVA
+
+If your interest is in whether groups have an effect on your continuous variable, in general, you'll perform an **ANOVA** test, or analysis of variance, analysis. Recall that this assesses whether the mean of your continuous variable is different between groups. (For example, whether the average asking rent is significantly different between neighborhoods.)
+
+Your **null hypothesis** ($H_{0}$) will be that that there is no difference in the average of your continuous variable between groups, and your **alternative hypothesis**  ($H_{1}$) will be that there is a difference in the average of your continuous variable between groups.
+
+You should report your results using a standard **results table for an ANOVA test**. This should be accompanied by a **boxplot or violin plot** summarizing the distribution of your continuous variable for each category.
+
+### t-test
+
+If you have two different samples that are of interest **and** particular categories of interest that you want to compare directly (for example, asking rents in two different neighborhoods), you will be performing a **t-test**.  Recall that this compares the means of two different samples and assesses whether they're significantly different.
+
+Your **null hypothesis** ($H_{0}$) will be that that there is no difference in the average of your continuous variable between your samples, and your **alternative hypothesis**  ($H_{1}$) will be that there is a difference in the average of your continuous variable between your samples.
+
+You should report the results of your t-test using a standard **results table for a t-test**. This should be accompanied by a **boxplot or violin plot** summarizing the distribution of your continuous variable for each category.
+
+If you want to experiment with material beyond the scope of our class, you could try including the categorical variable as an independent variable in a regression model, where the continuous variable is your dependent variable. This creates a "dummy" or "treatment" variable, which tests the relationship of each possible value on the continuous variable. (For example, the relationship between neighborhood and asking rent.)
+
+## If you have two continuous variables...
+
+If you have two continuous variables, you should assess whether and how they are **correlated**. This means you'll be calculating a Pearson correlation coefficient ($r$), and running a **bivariate linear regression**.
+
+For the Pearson correlation coefficient, your **null hypothesis** ($H_{0}$) will be that that the correlation is 0 and your **alternative hypothesis**  ($H_{1}$) will be that the correlation is either positive or negative.
+
+Recall that a linear model uses the model $\hat{y} = \beta_{0} + \beta_{1}x$, where...
+
++ $\hat{y}$ is the estimated value of the dependent variable;
++ $\beta{0}$ is the intercept, or the average value when $x$ is zero;
++ $\beta_{1}$ is the average change in your dependent variable given a one-unit increase in $x$; and
++ $x$ is the value of the independent variable.
+
+Your **null hypothesis** ($H_{0}$) will be that $\beta_{1} = 0$ (in other words, that there is no correlation between your independent variable and your response variable). Your **alternative hypothesis** ($H_{1}$) will be that $\beta_{1} \not= 0$ (in other words, that there **is** a correlation between your independent variable and your response variable).
+
+Report your results using the the standard regression table output. This should be accompanied by a **scatterplot that includes a linear fit line**.
+
+# Discussing Your Results
+
+You can think of this in several parts:
+
+1. What are your results? Do you reject your null hypotheses? What is and is not statistically significant?
+2. Do the relationships you identify (including their direction and magnitude) seem plausible?
+3. How do you make sense of your findings? What do they mean?
+
+Please answer these questions thoughtfully---if you don't find anything conclusive, that's okay! Think about why that might be. If your results are counter-intuitive, think about what might be contributing to the surprising results.
