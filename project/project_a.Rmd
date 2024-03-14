@@ -75,6 +75,6 @@ Alongside the below results, provide commentary as necessary.
         
 4. Relationships Among Variables
 
-    1. Create a scatter plot of the relationship between your variables of interest. (We'll go over this in the coming week!)
+    1. Create a scatter plot (for continuous variables), a box or violin plot (for a categorical variable related to a continuou variable), or a crosstab (for two continuous variables). This will give you a preliminary sense of the relationship between your variables of interest. (We'll go over scatterplots in the coming week!)
     
 At the conclusion of this, you’ll have a better understanding of your data, which will be necessary as you carry out your analysis in the coming week!
