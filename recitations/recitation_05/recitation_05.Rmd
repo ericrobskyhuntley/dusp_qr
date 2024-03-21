@@ -91,7 +91,7 @@ In this case we have a categorical variable and a quantitative variable, meaning
 claims_housing <- claims |>
   filter(yearOfLoss == 2005 & occupancyType %in% c(1, 2, 3))
 
-anova <- aov(netContentsPaymentAmount ~ occupancyType, data = claims_housing)
+anova <- aov(netContentsPaymentAmount ~ factor(occupancyType), data = claims_housing)
 
 summary(anova)
 ```
@@ -138,12 +138,12 @@ Looks like we have some big outliers. Let's filter these out...
 katrina_claims_filt <- katrina_claims |>
   filter(netBuildingPaymentAmount < 5e+05, buildingDamageAmount < 3.5e+06)
 
-plot(katrina_claims_filt$netBuildingPaymentAmount, katrina_claims_filt$buildingDamageAmount)
+plot(katrina_claims_filt$buildingDamageAmount, katrina_claims_filt$netBuildingPaymentAmount)
 ```
 We see some interesting 'clumping' --- for example, there appears to be many payouts totaling $25,000! This indicates that there's probably a policy measure in place that sets that threshold. Note that we could also produce this graph using `ggplot`...
 
 ```{r}
-ggplot(katrina_claims_filt, aes(x=netBuildingPaymentAmount, y=buildingDamageAmount)) +
+ggplot(katrina_claims_filt, aes(x=buildingDamageAmount, y=netBuildingPaymentAmount)) +
   geom_point(size=1, color = 'red') +
   labs(title = "Building Damage vs. Payment") + 
   xlab("Net Payment") +
@@ -153,7 +153,7 @@ ggplot(katrina_claims_filt, aes(x=netBuildingPaymentAmount, y=buildingDamageAmou
 Because we see a lot of clumping around an obvious fit line (which is obscuring our view of the data), we could use the `geom_hex()` ggplot geometry to visualize density.
 
 ```{r}
-ggplot(katrina_claims_filt, aes(x=netBuildingPaymentAmount, y=buildingDamageAmount)) +
+ggplot(katrina_claims_filt, aes(x=buildingDamageAmount, y=netBuildingPaymentAmount)) +
   # Use more bins for a more granular visualization!
   geom_hex(bins = 50) +
   labs(title = "Building Damage vs. Payment") + 
@@ -165,6 +165,8 @@ We could then test the _correlation_ between the two variables using either a si
 
 ```{r}
 cor(katrina_claims$netBuildingPaymentAmount, katrina_claims$buildingDamageAmount)
+
+cor.test(katrina_claims$netBuildingPaymentAmount, katrina_claims$buildingDamageAmount)
 ```
 
 This tells us, essentially, that there is a positive relationship---larger building damage, larger payment amount. As a general rule of thumb, values greater than 0.5 indicate a strong correlation.
@@ -172,9 +174,9 @@ This tells us, essentially, that there is a positive relationship---larger build
 But what if we want to be able to discuss this relationship in units? I.e., a unit change in one variable being associated with a unit change in the other? This is where __linear regression__ comes in. We Use the `lm()` function to run a _bivariate regression_ on our two variables.
 
 ```{r}
-katrina_claims <- lm(netBuildingPaymentAmount ~ buildingDamageAmount, data = katrina_claims)
+katrina_claims_results <- lm(netBuildingPaymentAmount ~ buildingDamageAmount, data = katrina_claims)
 
-summary(katrina_claims)
+summary(katrina_claims_results)
 ```
 
 Interpreting our results: we have a positive coefficient estimate for building damage, though it is not 1. It's instead telling us that, in general, a 1 dollar change in building damage amount is associated with a $0.26 change in payment. We see a very small p-value, which indicates that the correlation is statistically significant. And we have an R-squared value that indicates that 30% of the variation in the payment is explained by variation in the building damage.
