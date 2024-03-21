@@ -87,6 +87,8 @@ In this case we have a categorical variable and a quantitative variable, meaning
 + $H_{0}$: There _is no difference_ between the contents payment amount in different occupancy types.
 + $H_{1}$: There _is a difference_ between the contents payment amount for different occupancy types.
 
+Note that we _factorize_ our occupancy type---this ensures that R is treating those values as fully categorical.
+
 ```{r}
 claims_housing <- claims |>
   filter(yearOfLoss == 2005 & occupancyType %in% c(1, 2, 3))
